@@ -55,53 +55,58 @@ class AdvertisementController extends Controller
      * Display approved advertisements.
      */
     public function index(Request $request)
-    {
-        $query = Advertisement::where('status', 'approved');
+{
+    $query = Advertisement::where('status', 'approved');
 
-        if ($request->filled('search')) {
-            $search = $request->search;
+    if ($request->filled('search')) {
+        $search = $request->search;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%');
-            });
-        }
-
-        if ($request->filled('category')) {
-            $query->where('category', $request->category);
-        }
-
-        if ($request->filled('location')) {
-            $query->where('location', $request->location);
-        }
-
-        if ($request->filled('min_price')) {
-            $query->where('price', '>=', $request->min_price);
-        }
-
-        if ($request->filled('max_price')) {
-            $query->where('price', '<=', $request->max_price);
-        }
-
-        $advertisements = $query->latest()->get();
-
-        $categories = Advertisement::where('status', 'approved')
-            ->whereNotNull('category')
-            ->distinct()
-            ->pluck('category');
-
-        $locations = Advertisement::where('status', 'approved')
-            ->whereNotNull('location')
-            ->distinct()
-            ->pluck('location');
-
-        return view('advertisements.index', compact(
-            'advertisements',
-            'categories',
-            'locations'
-        ));
+        $query->where(function ($q) use ($search) {
+            $q->where('title', 'like', '%' . $search . '%')
+              ->orWhere('description', 'like', '%' . $search . '%');
+        });
     }
 
+    if ($request->filled('category')) {
+        $query->where('category', $request->category);
+    }
+
+    if ($request->filled('location')) {
+        $query->where('location', $request->location);
+    }
+
+    // Minimum price filter
+    if ($request->filled('min_price')) {
+        $query->where('price', '>=', $request->min_price);
+    }
+
+    // Maximum price filter
+    if ($request->filled('max_price')) {
+        $query->where('price', '<=', $request->max_price);
+    }
+
+    // Pagination: 9 advertisements per page
+    $advertisements = $query
+        ->latest()
+        ->paginate(9)
+        ->withQueryString();
+
+    $categories = Advertisement::where('status', 'approved')
+        ->whereNotNull('category')
+        ->distinct()
+        ->pluck('category');
+
+    $locations = Advertisement::where('status', 'approved')
+        ->whereNotNull('location')
+        ->distinct()
+        ->pluck('location');
+
+    return view('advertisements.index', compact(
+        'advertisements',
+        'categories',
+        'locations'
+    ));
+}
     /**
      * Display a single advertisement.
      */

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Advertisements</title>
+    <title>Advertisements - Marketplace</title>
 
     <style>
         * {
@@ -16,122 +16,165 @@
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
             background: #f5f6f8;
-            color: #333;
+            color: #222;
         }
 
-        /* Header */
+        /* ================= HEADER ================= */
+
         .header {
             background: #ffffff;
-            padding: 20px 40px;
             border-bottom: 1px solid #ddd;
+            padding: 18px 40px;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: bold;
-            color: #2563eb;
-        }
-
-        .header a {
+            color: #111827;
             text-decoration: none;
-            color: #333;
-            margin-left: 20px;
         }
 
-        /* Main container */
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-link {
+            text-decoration: none;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .header-link:hover {
+            color: #111827;
+        }
+
+        .login-button {
+            background: #111827;
+            color: white;
+            padding: 9px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* ================= MAIN ================= */
+
         .container {
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 35px auto;
             padding: 0 20px;
         }
 
         .page-title {
-            margin-bottom: 25px;
-        }
-
-        .page-title h1 {
-            margin: 0;
             font-size: 32px;
+            margin: 0 0 8px;
+            color: #111827;
         }
 
-        .page-title p {
-            color: #777;
-            margin-top: 8px;
-        }
-
-        /* Search box */
-        .filter-box {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        .page-subtitle {
+            color: #6b7280;
             margin-bottom: 30px;
         }
 
-        .filter-box h2 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 20px;
+        /* ================= SEARCH ================= */
+
+        .search-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+            margin-bottom: 35px;
         }
 
-        .filter-grid {
+        .search-row {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr;
             gap: 15px;
+            margin-bottom: 15px;
         }
 
-        .price-grid {
+        .price-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
-            margin-top: 15px;
+            margin-bottom: 15px;
         }
 
-        .filter-box input,
-        .filter-box select {
+        .field {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
             border-radius: 7px;
+            background: white;
             font-size: 14px;
         }
 
-        .filter-actions {
-            margin-top: 20px;
+        .field input:focus,
+        .field select:focus {
+            outline: none;
+            border-color: #2563eb;
         }
 
-        .search-btn {
+        .search-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-button {
+            border: none;
             background: #2563eb;
             color: white;
-            border: none;
-            padding: 12px 25px;
+            padding: 11px 22px;
             border-radius: 7px;
+            font-weight: bold;
             cursor: pointer;
-            font-size: 15px;
         }
 
-        .search-btn:hover {
+        .search-button:hover {
             background: #1d4ed8;
         }
 
-        .clear-btn {
-            display: inline-block;
-            margin-left: 10px;
-            padding: 12px 20px;
-            background: #eee;
-            color: #333;
-            text-decoration: none;
+        .clear-button {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 11px 20px;
             border-radius: 7px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
         }
 
-        .clear-btn:hover {
-            background: #ddd;
+        .clear-button:hover {
+            background: #e5e7eb;
         }
 
-        /* Results */
+        /* ================= RESULTS ================= */
+
         .results-header {
             display: flex;
             justify-content: space-between;
@@ -139,156 +182,193 @@
             margin-bottom: 20px;
         }
 
-        .results-header h2 {
+        .results-title {
+            font-size: 22px;
             margin: 0;
         }
 
-        .result-count {
-            color: #777;
+        .results-count {
+            color: #6b7280;
+            font-size: 14px;
         }
 
-        /* Advertisement cards */
+        /* ================= CARD GRID ================= */
+
         .advertisement-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
+            gap: 22px;
         }
 
         .advertisement-card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .advertisement-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.10);
         }
 
-        /* Image */
+        /* ================= IMAGE ================= */
+
+        .image-container {
+            width: 100%;
+            height: 220px;
+            background: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
         .advertisement-image {
             width: 100%;
             height: 220px;
             object-fit: cover;
-            display: block;
         }
 
         .no-image {
-            width: 100%;
-            height: 220px;
-            background: #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #777;
-            font-size: 16px;
+            color: #9ca3af;
+            font-size: 14px;
         }
 
-        /* Card content */
+        /* ================= CARD CONTENT ================= */
+
         .card-content {
-            padding: 20px;
+            padding: 18px;
         }
 
-        .card-title {
-            font-size: 20px;
-            margin: 0 0 10px 0;
-            color: #222;
-        }
-
-        .price {
-            font-size: 22px;
-            font-weight: bold;
-            color: #16a34a;
-            margin-bottom: 12px;
-        }
-
-        .category {
+        .category-badge {
             display: inline-block;
-            background: #dbeafe;
+            background: #eff6ff;
             color: #1d4ed8;
-            padding: 5px 10px;
+            padding: 5px 9px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 11px;
+            font-weight: bold;
             margin-bottom: 10px;
         }
 
-        .location {
-            color: #666;
-            margin: 8px 0;
+        .card-title {
+            margin: 0 0 8px;
+            font-size: 19px;
+            color: #111827;
         }
 
         .description {
-            color: #666;
+            color: #6b7280;
+            font-size: 13px;
             line-height: 1.5;
-            margin: 10px 0 15px 0;
+            min-height: 40px;
+            margin-bottom: 12px;
         }
 
-        .view-btn {
+        .price {
+            font-size: 21px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .location {
+            color: #6b7280;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .view-button {
             display: block;
+            width: 100%;
             text-align: center;
-            background: #2563eb;
+            background: #111827;
             color: white;
             padding: 11px;
             border-radius: 7px;
             text-decoration: none;
-            margin-top: 15px;
+            font-size: 14px;
+            font-weight: bold;
         }
 
-        .view-btn:hover {
-            background: #1d4ed8;
+        .view-button:hover {
+            background: #374151;
         }
 
-        /* No results */
-        .no-results {
+        /* ================= EMPTY ================= */
+
+        .empty {
             background: white;
-            padding: 50px;
-            text-align: center;
             border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+            padding: 60px 20px;
+            text-align: center;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
         }
 
-        .no-results h2 {
+        .empty h2 {
             margin-bottom: 10px;
+            color: #374151;
         }
 
-        .no-results p {
-            color: #777;
+        .empty p {
+            color: #6b7280;
         }
 
-        /* Responsive */
+        /* ================= RESPONSIVE ================= */
+
         @media (max-width: 900px) {
+
             .advertisement-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .filter-grid {
+            .search-row {
                 grid-template-columns: 1fr;
             }
         }
 
         @media (max-width: 600px) {
+
             .header {
                 padding: 15px 20px;
             }
 
-            .container {
-                padding: 0 15px;
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .header-links {
+                width: 100%;
+                justify-content: space-between;
             }
 
             .advertisement-grid {
                 grid-template-columns: 1fr;
             }
 
-            .price-grid {
+            .price-row {
                 grid-template-columns: 1fr;
+            }
+
+            .search-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-button,
+            .clear-button {
+                text-align: center;
+                width: 100%;
             }
 
             .results-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 8px;
+                gap: 5px;
             }
         }
     </style>
@@ -297,87 +377,126 @@
 
 <body>
 
-    <!-- Header -->
+    <!-- ================= HEADER ================= -->
 
-    <div class="header">
+    <header class="header">
 
-        <div class="logo">
-            Advertisement Platform
-        </div>
+        <div class="header-inner">
 
-        <div>
-            <a href="{{ route('advertisements.index') }}">
-                Home
+            <a
+                href="{{ route('advertisements.index') }}"
+                class="logo"
+            >
+                Advertisement Platform
             </a>
 
-            @auth
+            <div class="header-links">
 
-                @if(auth()->user()->role === 'advertiser')
-                    <a href="{{ route('advertiser.dashboard') }}">
-                        Dashboard
+                @auth
+
+                    @if (auth()->user()->role === 'visitor')
+
+                        <a
+                            href="{{ route('visitor.dashboard') }}"
+                            class="header-link"
+                        >
+                            Dashboard
+                        </a>
+
+                    @elseif (auth()->user()->role === 'advertiser')
+
+                        <a
+                            href="{{ route('advertiser.dashboard') }}"
+                            class="header-link"
+                        >
+                            Dashboard
+                        </a>
+
+                    @elseif (auth()->user()->role === 'admin')
+
+                        <a
+                            href="{{ route('admin.dashboard') }}"
+                            class="header-link"
+                        >
+                            Dashboard
+                        </a>
+
+                    @endif
+
+                    <form
+                        method="POST"
+                        action="{{ route('logout') }}"
+                        style="display: inline;"
+                    >
+                        @csrf
+
+                        <button
+                            type="submit"
+                            style="
+                                border: none;
+                                background: #ef4444;
+                                color: white;
+                                padding: 9px 16px;
+                                border-radius: 6px;
+                                cursor: pointer;
+                                font-weight: bold;
+                            "
+                        >
+                            Log Out
+                        </button>
+                    </form>
+
+                @else
+
+                    <a
+                        href="{{ route('login') }}"
+                        class="login-button"
+                    >
+                        Login
                     </a>
-                @elseif(auth()->user()->role === 'visitor')
-                    <a href="{{ route('visitor.dashboard') }}">
-                        Dashboard
-                    </a>
-                @elseif(auth()->user()->role === 'admin')
-                    <a href="{{ route('admin.dashboard') }}">
-                        Dashboard
-                    </a>
-                @endif
 
-            @else
+                @endauth
 
-                <a href="{{ route('login') }}">
-                    Login
-                </a>
+            </div>
 
-            @endauth
         </div>
 
-    </div>
+    </header>
 
 
-    <!-- Main -->
+    <!-- ================= MAIN ================= -->
 
-    <div class="container">
+    <main class="container">
 
-        <!-- Page title -->
+        <h1 class="page-title">
+            Find What You Need
+        </h1>
 
-        <div class="page-title">
-
-            <h1>
-                Available Advertisements
-            </h1>
-
-            <p>
-                Find products, services, vehicles, property and more.
-            </p>
-
-        </div>
+        <p class="page-subtitle">
+            Browse approved advertisements from our marketplace.
+        </p>
 
 
-        <!-- Filters -->
+        <!-- ================= SEARCH / FILTER ================= -->
 
-        <div class="filter-box">
-
-            <h2>
-                Search & Filter
-            </h2>
+        <div class="search-box">
 
             <form
                 method="GET"
                 action="{{ route('advertisements.index') }}"
             >
 
-                <div class="filter-grid">
+                <div class="search-row">
 
-                    <!-- Search -->
+                    <div class="field">
 
-                    <div>
+                        <label for="search">
+                            Search
+                        </label>
 
                         <input
                             type="text"
+                            id="search"
                             name="search"
                             placeholder="Search advertisements..."
                             value="{{ request('search') }}"
@@ -386,11 +505,16 @@
                     </div>
 
 
-                    <!-- Category -->
+                    <div class="field">
 
-                    <div>
+                        <label for="category">
+                            Category
+                        </label>
 
-                        <select name="category">
+                        <select
+                            name="category"
+                            id="category"
+                        >
 
                             <option value="">
                                 All Categories
@@ -412,11 +536,16 @@
                     </div>
 
 
-                    <!-- Location -->
+                    <div class="field">
 
-                    <div>
+                        <label for="location">
+                            Location
+                        </label>
 
-                        <select name="location">
+                        <select
+                            name="location"
+                            id="location"
+                        >
 
                             <option value="">
                                 All Locations
@@ -440,11 +569,11 @@
                 </div>
 
 
-                <!-- Price filters -->
+                <!-- PRICE FILTERS -->
 
-                <div class="price-grid">
+                <div class="price-row">
 
-                    <div>
+                    <div class="field">
 
                         <label for="min_price">
                             Minimum Price
@@ -462,7 +591,7 @@
                     </div>
 
 
-                    <div>
+                    <div class="field">
 
                         <label for="max_price">
                             Maximum Price
@@ -482,20 +611,20 @@
                 </div>
 
 
-                <!-- Buttons -->
+                <!-- SEARCH BUTTONS -->
 
-                <div class="filter-actions">
+                <div class="search-actions">
 
                     <button
                         type="submit"
-                        class="search-btn"
+                        class="search-button"
                     >
-                        Search
+                        🔎 Search
                     </button>
 
                     <a
                         href="{{ route('advertisements.index') }}"
-                        class="clear-btn"
+                        class="clear-button"
                     >
                         Clear Filters
                     </a>
@@ -507,26 +636,21 @@
         </div>
 
 
-        <!-- Results header -->
+        <!-- ================= RESULTS ================= -->
 
         <div class="results-header">
 
-            <h2>
-                Latest Advertisements
+            <h2 class="results-title">
+                Available Advertisements
             </h2>
 
-            <div class="result-count">
-
+            <span class="results-count">
                 {{ $advertisements->count() }}
-
                 advertisement(s) found
-
-            </div>
+            </span>
 
         </div>
 
-
-        <!-- Advertisement cards -->
 
         @if ($advertisements->count() > 0)
 
@@ -534,139 +658,141 @@
 
                 @foreach ($advertisements as $advertisement)
 
-                    <div class="advertisement-card">
+                    <article class="advertisement-card">
+
+                        <!-- IMAGE -->
+
+                        <div class="image-container">
+
+                            @if ($advertisement->image)
+
+                                <img
+                                    src="{{ asset('storage/' . $advertisement->image) }}"
+                                    alt="{{ $advertisement->title }}"
+                                    class="advertisement-image"
+                                >
+
+                            @else
+
+                                <span class="no-image">
+                                    No Image Available
+                                </span>
+
+                            @endif
+
+                        </div>
 
 
-                        <!-- Advertisement image -->
-
-                        @if ($advertisement->image)
-
-                            <img
-                                src="{{ asset('storage/' . $advertisement->image) }}"
-                                alt="{{ $advertisement->title }}"
-                                class="advertisement-image"
-                            >
-
-                        @else
-
-                            <div class="no-image">
-
-                                No Image Available
-
-                            </div>
-
-                        @endif
-
-
-                        <!-- Card content -->
+                        <!-- CONTENT -->
 
                         <div class="card-content">
 
-
-                            <!-- Category -->
-
                             @if ($advertisement->category)
 
-                                <span class="category">
-
+                                <span class="category-badge">
                                     {{ $advertisement->category }}
-
                                 </span>
 
                             @endif
 
 
-                            <!-- Title -->
-
                             <h2 class="card-title">
-
                                 {{ $advertisement->title }}
-
                             </h2>
 
 
-                            <!-- Price -->
+                            <p class="description">
 
-                            <div class="price">
+                                {{ \Illuminate\Support\Str::limit(
+                                    $advertisement->description,
+                                    100
+                                ) }}
 
-                                @if ($advertisement->price !== null)
+                            </p>
 
-                                    Rs. {{ number_format($advertisement->price, 2) }}
 
-                                @else
+                            @if ($advertisement->price !== null)
 
+                                <div class="price">
+
+                                    Rs.
+                                    {{ number_format($advertisement->price, 2) }}
+
+                                </div>
+
+                            @else
+
+                                <div class="price">
                                     Price not specified
+                                </div>
 
-                                @endif
+                            @endif
 
-                            </div>
-
-
-                            <!-- Location -->
 
                             @if ($advertisement->location)
 
                                 <div class="location">
 
-                                    📍 {{ $advertisement->location }}
+                                    📍
+                                    {{ $advertisement->location }}
 
                                 </div>
 
                             @endif
 
 
-                            <!-- Description -->
-
-                            <div class="description">
-
-                                {{ \Illuminate\Support\Str::limit($advertisement->description, 100) }}
-
-                            </div>
-
-
-                            <!-- View button -->
-
                             <a
                                 href="{{ route('advertisements.show', $advertisement) }}"
-                                class="view-btn"
+                                class="view-button"
                             >
                                 View Details
                             </a>
 
                         </div>
 
-                    </div>
+                    </article>
 
                 @endforeach
 
+                        </div>
+
+            <!-- ================= PAGINATION ================= -->
+
+            <div style="
+                margin-top: 35px;
+                display: flex;
+                justify-content: center;
+            ">
+                {{ $advertisements->links() }}
             </div>
 
         @else
 
-            <!-- No results -->
-
-            <div class="no-results">
+            <!-- ================= NO RESULTS ================= -->
+            <div class="empty">
 
                 <h2>
-                    No Advertisements Found
+                    No advertisements found
                 </h2>
 
                 <p>
-                    We couldn't find any advertisements matching your search criteria.
+                    No advertisements match your search or filters.
                 </p>
+
+                <br>
 
                 <a
                     href="{{ route('advertisements.index') }}"
-                    class="clear-btn"
+                    class="clear-button"
                 >
-                    View All Advertisements
+                    Clear Filters
                 </a>
 
             </div>
 
         @endif
 
-    </div>
+    </main>
 
 </body>
 
