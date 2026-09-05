@@ -31,6 +31,19 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
+test('visitors are redirected to the visitor dashboard after login', function () {
+    $visitor = User::factory()->create([
+        'role' => 'visitor',
+    ]);
+
+    $response = $this->post('/login', [
+        'email' => $visitor->email,
+        'password' => 'password',
+    ]);
+
+    $response->assertRedirect(route('visitor.dashboard', absolute: false));
+});
+
 test('users can logout', function () {
     $user = User::factory()->create();
 

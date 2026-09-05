@@ -26,8 +26,7 @@
         </div>
     @endif
 
-    <form action="{{ route('advertisements.store') }}" method="POST">
-
+    <form action="{{ route('advertisements.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div>
@@ -84,7 +83,7 @@
 
         <br>
 
-        <div>
+                <div>
             <label for="location">Location</label>
             <input
                 type="text"
@@ -96,10 +95,26 @@
 
         <br>
 
+        <div>
+            <label for="image">Advertisement Image</label>
+
+            <input
+                type="file"
+                id="image"
+                name="image"
+                accept="image/jpeg,image/png,image/jpg,image/webp"
+            >
+
+            @error('image')
+                <p style="color: red;">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <br>
+
         <button type="submit">
             Submit Advertisement
         </button>
-
     </form>
 
     <br>

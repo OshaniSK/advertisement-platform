@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Advertisement;
+use App\Models\Message;
 use App\Models\User;
 
 test('advertisers can open the create advertisement page', function () {
@@ -10,6 +11,29 @@ test('advertisers can open the create advertisement page', function () {
 
     $response->assertOk();
     $response->assertViewIs('advertisements.create');
+});
+
+test('advertisers can submit an advertisement', function () {
+    $advertiser = User::factory()->create(['role' => 'advertiser']);
+
+    $response = $this->actingAs($advertiser)->post(
+        route('advertisements.store'),
+        [
+            'title' => 'New advertisement',
+            'description' => 'A new advertisement description',
+            'price' => '25.00',
+            'category' => 'Other',
+            'location' => 'Colombo',
+        ]
+    );
+
+    $response->assertRedirect(route('advertiser.dashboard', absolute: false));
+    $this->assertDatabaseHas('advertisements', [
+        'user_id' => $advertiser->id,
+        'title' => 'New advertisement',
+        'description' => 'A new advertisement description',
+        'status' => 'pending',
+    ]);
 });
 
 test('advertisers can update their own advertisement', function () {
@@ -74,4 +98,58 @@ test('advertiser dashboard also works with the common misspelling', function () 
 
     $response->assertOk();
     $response->assertViewIs('advertiser.dashboard');
+});
+
+test('visitors can open the visitor dashboard', function () {
+    $visitor = User::factory()->create(['role' => 'visitor']);
+
+    $response = $this->actingAs($visitor)->get(route('visitor.dashboard'));
+
+    $response->assertOk();
+    $response->assertViewIs('visitor.dashboard');
+});
+
+test('visitors are redirected when they open the advertiser dashboard URL', function () {
+    $visitor = User::factory()->create(['role' => 'visitor']);
+
+    $response = $this->actingAs($visitor)->get(route('advertiser.dashboard'));
+
+    $response->assertRedirect(route('visitor.dashboard', absolute: false));
+});
+
+test('advertiser can open a conversation when their reply is the latest message', function () {
+    $advertiser = User::factory()->create(['role' => 'advertiser']);
+    $visitor = User::factory()->create(['role' => 'visitor']);
+    $advertisement = Advertisement::create([
+        'user_id' => $advertiser->id,
+        'title' => 'Approved advertisement',
+        'description' => 'An approved advertisement',
+        'status' => 'approved',
+    ]);
+
+    Message::create([
+        'sender_id' => $visitor->id,
+        'receiver_id' => $advertiser->id,
+        'advertisement_id' => $advertisement->id,
+        'message' => 'Is this available?',
+    ]);
+    Message::create([
+        'sender_id' => $advertiser->id,
+        'receiver_id' => $visitor->id,
+        'advertisement_id' => $advertisement->id,
+        'message' => 'Yes, it is available.',
+    ]);
+
+    $dashboard = $this->actingAs($advertiser)->get(route('advertiser.dashboard'));
+
+    $dashboard->assertOk();
+    $dashboard->assertSee(route('messages.conversation', [
+        'advertisement' => $advertisement,
+        'other_user' => $visitor,
+    ]));
+
+    $this->get(route('messages.conversation', [
+        'advertisement' => $advertisement,
+        'other_user' => $visitor,
+    ]))->assertOk();
 });

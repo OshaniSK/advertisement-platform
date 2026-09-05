@@ -14,6 +14,7 @@ class Advertisement extends Model
         'price',
         'category',
         'location',
+        'image',
         'status',
     ];
 

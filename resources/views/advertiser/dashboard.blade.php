@@ -27,6 +27,23 @@
 <body>
 
     <h1>Advertiser Dashboard</h1>
+    <p>
+    <a href="{{ route('messages.inbox') }}">
+        💬 My Messages
+    </a>
+
+    @if ($unreadMessages > 0)
+        <span style="
+            background: red;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        ">
+            {{ $unreadMessages }} unread
+        </span>
+    @endif
+    </p>
 
     <form method="POST" action="{{ route('logout') }}">
         @csrf
@@ -113,11 +130,13 @@
 
             @php
 
-                $otherUserId = $message->sender_id === auth()->id()
+                $isSentByCurrentUser = (int) $message->sender_id === (int) auth()->id();
+
+                $otherUserId = $isSentByCurrentUser
                     ? $message->receiver_id
                     : $message->sender_id;
 
-                $otherUser = $message->sender_id === auth()->id()
+                $otherUser = $isSentByCurrentUser
                     ? $message->receiver
                     : $message->sender;
 
