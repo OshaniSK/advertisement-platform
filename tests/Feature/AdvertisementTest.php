@@ -3,6 +3,7 @@
 use App\Models\Advertisement;
 use App\Models\Message;
 use App\Models\User;
+use App\Notifications\NewMessageNotification;
 
 test('advertisers can open the create advertisement page', function () {
     $advertiser = User::factory()->create(['role' => 'advertiser']);
@@ -11,6 +12,31 @@ test('advertisers can open the create advertisement page', function () {
 
     $response->assertOk();
     $response->assertViewIs('advertisements.create');
+});
+
+test('navigation shows the notification bell for unread messages', function () {
+    $advertiser = User::factory()->create(['role' => 'advertiser']);
+    $visitor = User::factory()->create(['role' => 'visitor']);
+    $advertisement = Advertisement::create([
+        'user_id' => $advertiser->id,
+        'title' => 'Approved advertisement',
+        'description' => 'An approved advertisement',
+        'status' => 'approved',
+    ]);
+    $message = Message::create([
+        'sender_id' => $visitor->id,
+        'receiver_id' => $advertiser->id,
+        'advertisement_id' => $advertisement->id,
+        'message' => 'Is this available?',
+    ]);
+
+    $advertiser->notify(new NewMessageNotification($message->load(['sender', 'advertisement'])));
+
+    $response = $this->actingAs($advertiser)->get(route('dashboard'));
+
+    $response->assertOk();
+    $response->assertSee('🔔');
+    $response->assertSee('1');
 });
 
 test('advertisers can submit an advertisement', function () {

@@ -3,13 +3,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 ```
-<title>Chat - {{ $advertisement->title }}</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+    Chat - {{ $advertisement->title }}
+</title>
 
 <style>
+
     * {
         box-sizing: border-box;
     }
@@ -17,7 +21,7 @@
     body {
         margin: 0;
         font-family: Arial, Helvetica, sans-serif;
-        background: #f3f4f6;
+        background: #eef1f5;
         color: #111827;
     }
 
@@ -29,14 +33,14 @@
     }
 
     .chat-container {
-        max-width: 800px;
+        max-width: 850px;
         height: calc(100vh - 60px);
         min-height: 600px;
         margin: auto;
         background: white;
-        border-radius: 14px;
+        border-radius: 16px;
         overflow: hidden;
-        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.10);
         display: flex;
         flex-direction: column;
     }
@@ -46,30 +50,59 @@
     .chat-header {
         background: #111827;
         color: white;
-        padding: 20px 25px;
+        padding: 18px 24px;
     }
 
     .header-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
+    }
+
+    .header-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .avatar {
+        width: 45px;
+        height: 45px;
+        min-width: 45px;
+        border-radius: 50%;
+        background: #2563eb;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+        text-transform: uppercase;
+    }
+
+    .header-information {
+        min-width: 0;
+    }
+
+    .chat-with {
+        margin: 0 0 4px;
+        font-size: 16px;
+        font-weight: bold;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .advertisement-title {
         margin: 0;
-        font-size: 21px;
-        font-weight: bold;
-    }
-
-    .chat-with {
-        margin: 7px 0 0;
         color: #d1d5db;
-        font-size: 14px;
-    }
-
-    .chat-with strong {
-        color: white;
+        font-size: 13px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 500px;
     }
 
     .advertisement-link {
@@ -77,8 +110,9 @@
         text-decoration: none;
         font-size: 13px;
         border: 1px solid #6b7280;
-        padding: 8px 12px;
-        border-radius: 6px;
+        padding: 9px 13px;
+        border-radius: 7px;
+        white-space: nowrap;
     }
 
     .advertisement-link:hover {
@@ -111,14 +145,36 @@
         margin: 3px 0;
     }
 
-    /* ================= MESSAGES ================= */
+    /* ================= CHAT AREA ================= */
 
     .messages {
         flex: 1;
         overflow-y: auto;
         padding: 25px;
-        background: #f9fafb;
+        background: #f8fafc;
+        scroll-behavior: smooth;
     }
+
+    /* Scrollbar */
+
+    .messages::-webkit-scrollbar {
+        width: 7px;
+    }
+
+    .messages::-webkit-scrollbar-track {
+        background: #f1f5f9;
+    }
+
+    .messages::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .messages::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* ================= EMPTY CHAT ================= */
 
     .empty-chat {
         height: 100%;
@@ -129,9 +185,33 @@
         color: #9ca3af;
     }
 
+    .empty-icon {
+        width: 60px;
+        height: 60px;
+        margin: auto auto 15px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 28px;
+    }
+
+    .empty-chat p {
+        margin: 6px 0;
+    }
+
+    .empty-title {
+        color: #374151;
+        font-weight: bold;
+    }
+
+    /* ================= MESSAGE ================= */
+
     .message {
         display: flex;
         margin-bottom: 18px;
+        width: 100%;
     }
 
     .message.sent {
@@ -142,30 +222,39 @@
         justify-content: flex-start;
     }
 
-    .bubble {
-        max-width: 70%;
-        padding: 12px 16px;
-        border-radius: 16px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    .message-content {
+        max-width: 72%;
     }
+
+    .bubble {
+        padding: 12px 16px;
+        border-radius: 17px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+    }
+
+    /* Sent */
 
     .sent .bubble {
         background: #2563eb;
         color: white;
-        border-bottom-right-radius: 4px;
+        border-bottom-right-radius: 5px;
     }
+
+    /* Received */
 
     .received .bubble {
         background: white;
         color: #111827;
         border: 1px solid #e5e7eb;
-        border-bottom-left-radius: 4px;
+        border-bottom-left-radius: 5px;
     }
 
+    /* ================= SENDER ================= */
+
     .sender {
-        font-size: 12px;
+        font-size: 11px;
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-bottom: 6px;
     }
 
     .sent .sender {
@@ -176,12 +265,17 @@
         color: #374151;
     }
 
+    /* ================= MESSAGE TEXT ================= */
+
     .message-text {
         margin: 0;
         line-height: 1.5;
+        font-size: 14px;
         white-space: pre-wrap;
         word-break: break-word;
     }
+
+    /* ================= TIME ================= */
 
     .time {
         margin-top: 7px;
@@ -221,37 +315,43 @@
         max-height: 140px;
         padding: 13px 15px;
         border: 1px solid #d1d5db;
-        border-radius: 10px;
+        border-radius: 12px;
         font-family: Arial, Helvetica, sans-serif;
         font-size: 14px;
         resize: vertical;
         outline: none;
+        transition: 0.2s;
     }
 
     .message-input textarea:focus {
         border-color: #2563eb;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
     }
 
     .send-button {
         border: none;
         background: #2563eb;
         color: white;
-        padding: 13px 20px;
-        border-radius: 9px;
+        padding: 13px 21px;
+        border-radius: 10px;
         font-weight: bold;
         cursor: pointer;
         white-space: nowrap;
+        transition: 0.2s;
     }
 
     .send-button:hover {
         background: #1d4ed8;
     }
 
+    .send-button:active {
+        transform: scale(0.98);
+    }
+
     /* ================= BACK LINK ================= */
 
     .back-link-container {
-        max-width: 800px;
+        max-width: 850px;
         margin: 15px auto 0;
     }
 
@@ -281,15 +381,27 @@
         }
 
         .chat-header {
-            padding: 18px;
+            padding: 15px;
         }
 
         .header-top {
-            align-items: flex-start;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            font-size: 16px;
+        }
+
+        .chat-with {
+            font-size: 15px;
         }
 
         .advertisement-title {
-            font-size: 18px;
+            font-size: 12px;
+            max-width: 210px;
         }
 
         .advertisement-link {
@@ -300,26 +412,41 @@
             padding: 18px 12px;
         }
 
-        .bubble {
+        .message-content {
             max-width: 82%;
         }
 
+        .bubble {
+            padding: 11px 14px;
+        }
+
+        .message-text {
+            font-size: 14px;
+        }
+
         .message-form {
-            padding: 12px;
+            padding: 10px;
         }
 
         .message-form form {
-            align-items: stretch;
+            gap: 7px;
+        }
+
+        .message-input textarea {
+            min-height: 48px;
+            padding: 11px 12px;
         }
 
         .send-button {
-            padding: 10px 15px;
+            padding: 11px 15px;
         }
 
         .back-link-container {
             display: none;
         }
+
     }
+
 </style>
 ```
 
@@ -332,24 +459,47 @@
 ```
 <div class="chat-container">
 
+
     <!-- ================= CHAT HEADER ================= -->
 
     <div class="chat-header">
 
         <div class="header-top">
 
-            <div>
+            <div class="header-user">
 
-                <h1 class="advertisement-title">
-                    {{ $advertisement->title }}
-                </h1>
 
-                <p class="chat-with">
-                    Chat with
-                    <strong>{{ $other_user->name }}</strong>
-                </p>
+                <!-- Avatar -->
+
+                <div class="avatar">
+
+                    {{ strtoupper(substr($other_user->name, 0, 1)) }}
+
+                </div>
+
+
+                <!-- User Information -->
+
+                <div class="header-information">
+
+                    <p class="chat-with">
+
+                        {{ $other_user->name }}
+
+                    </p>
+
+                    <p class="advertisement-title">
+
+                        {{ $advertisement->title }}
+
+                    </p>
+
+                </div>
 
             </div>
+
+
+            <!-- Advertisement -->
 
             <a
                 href="{{ route('advertisements.show', $advertisement) }}"
@@ -368,7 +518,9 @@
     @if (session('success'))
 
         <div class="success">
+
             {{ session('success') }}
+
         </div>
 
     @endif
@@ -382,7 +534,9 @@
 
             @foreach ($errors->all() as $error)
 
-                <p>{{ $error }}</p>
+                <p>
+                    {{ $error }}
+                </p>
 
             @endforeach
 
@@ -393,72 +547,106 @@
 
     <!-- ================= CHAT MESSAGES ================= -->
 
-    <div class="messages" id="messages">
+    <div
+        class="messages"
+        id="messages"
+    >
 
         @if ($messages->count() > 0)
 
+
             @foreach ($messages as $message)
+
 
                 @if ($message->sender_id === auth()->id())
 
-                    <!-- Message sent by logged-in user -->
+
+                    <!-- ================= SENT MESSAGE ================= -->
 
                     <div class="message sent">
 
-                        <div class="bubble">
+                        <div class="message-content">
 
-                            <div class="sender">
-                                You
-                            </div>
+                            <div class="bubble">
 
-                            <p class="message-text">
-                                {{ $message->message }}
-                            </p>
+                                <div class="sender">
+                                    You
+                                </div>
 
-                            <div class="time">
-                                {{ $message->created_at->format('M d, Y • h:i A') }}
+                                <p class="message-text">
+                                    {{ $message->message }}
+                                </p>
+
+                                <div class="time">
+
+                                    {{ $message->created_at->format('M d, Y • h:i A') }}
+
+                                </div>
+
                             </div>
 
                         </div>
 
                     </div>
+
 
                 @else
 
-                    <!-- Message received from other user -->
+
+                    <!-- ================= RECEIVED MESSAGE ================= -->
 
                     <div class="message received">
 
-                        <div class="bubble">
+                        <div class="message-content">
 
-                            <div class="sender">
-                                {{ $message->sender->name }}
-                            </div>
+                            <div class="bubble">
 
-                            <p class="message-text">
-                                {{ $message->message }}
-                            </p>
+                                <div class="sender">
 
-                            <div class="time">
-                                {{ $message->created_at->format('M d, Y • h:i A') }}
+                                    {{ $message->sender->name }}
+
+                                </div>
+
+                                <p class="message-text">
+
+                                    {{ $message->message }}
+
+                                </p>
+
+                                <div class="time">
+
+                                    {{ $message->created_at->format('M d, Y • h:i A') }}
+
+                                </div>
+
                             </div>
 
                         </div>
 
                     </div>
 
+
                 @endif
+
 
             @endforeach
 
+
         @else
+
+
+            <!-- ================= EMPTY CHAT ================= -->
 
             <div class="empty-chat">
 
                 <div>
 
-                    <p>
-                        No messages yet.
+                    <div class="empty-icon">
+                        💬
+                    </div>
+
+                    <p class="empty-title">
+                        No messages yet
                     </p>
 
                     <p>
@@ -468,6 +656,7 @@
                 </div>
 
             </div>
+
 
         @endif
 
@@ -488,10 +677,12 @@
 
             @csrf
 
+
             <div class="message-input">
 
                 <textarea
                     name="message"
+                    id="message"
                     rows="2"
                     maxlength="2000"
                     placeholder="Type your message..."
@@ -499,6 +690,7 @@
                 ></textarea>
 
             </div>
+
 
             <button
                 type="submit"
@@ -510,6 +702,7 @@
         </form>
 
     </div>
+
 
 </div>
 
@@ -530,14 +723,51 @@
 
 </div>
 
-<!-- ================= AUTO SCROLL ================= -->
+<!-- ================= JAVASCRIPT ================= -->
 
 <script>
 
-    const messagesContainer = document.getElementById('messages');
+    /*
+     * Automatically scroll to the newest message
+     */
+
+    const messagesContainer =
+        document.getElementById('messages');
 
     if (messagesContainer) {
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        messagesContainer.scrollTop =
+            messagesContainer.scrollHeight;
+
+    }
+
+
+    /*
+     * Press Enter to send.
+     *
+     * Shift + Enter creates a new line.
+     */
+
+    const messageInput =
+        document.getElementById('message');
+
+    if (messageInput) {
+
+        messageInput.addEventListener('keydown', function(event) {
+
+            if (
+                event.key === 'Enter' &&
+                !event.shiftKey
+            ) {
+
+                event.preventDefault();
+
+                this.closest('form').submit();
+
+            }
+
+        });
+
     }
 
 </script>

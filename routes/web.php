@@ -8,6 +8,7 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VisitorController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\NotificationController;
 use App\Models\Advertisement;
 use Illuminate\Support\Facades\Route;
 
@@ -236,6 +237,21 @@ Route::get('/advertiser/dashboard', [AdvertiserController::class, 'dashboard'])
 Route::get('/visitor/dashboard', [VisitorController::class, 'dashboard'])
     ->middleware(['auth', 'role:visitor'])
     ->name('visitor.dashboard');
+
+/* Notifications */
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.readAll');
+
+});
 
 
 /*
