@@ -11,6 +11,12 @@ use App\Models\Advertisement;
 use Illuminate\Support\Facades\Route;
 
 
+/*
+|--------------------------------------------------------------------------
+| Home
+|--------------------------------------------------------------------------
+*/
+
 Route::get('/', function () {
 
     $advertisements = Advertisement::where('status', 'approved')
@@ -32,9 +38,14 @@ Route::get('/', function () {
 Route::get('/advertisements', [AdvertisementController::class, 'index'])
     ->name('advertisements.index');
 
+// View a single approved advertisement
+Route::get('/advertisements/{advertisement}', [AdvertisementController::class, 'show'])
+    ->name('advertisements.show');
+
+
 /*
 |--------------------------------------------------------------------------
-| Advertisement - Advertiser
+| Advertisements - Advertiser
 |--------------------------------------------------------------------------
 */
 
@@ -42,10 +53,6 @@ Route::get('/advertisements', [AdvertisementController::class, 'index'])
 Route::get('/advertisements/create', [AdvertisementController::class, 'create'])
     ->middleware(['auth', 'role:advertiser'])
     ->name('advertisements.create');
-
-// View single advertisement
-Route::get('/advertisements/{advertisement}', [AdvertisementController::class, 'show'])
-    ->name('advertisements.show');
 
 // Store advertisement
 Route::post('/advertisements', [AdvertisementController::class, 'store'])
@@ -77,6 +84,7 @@ Route::delete('/advertisements/{advertisement}', [AdvertisementController::class
 // Contact seller page
 Route::get('/advertisements/{advertisement}/contact', function (Advertisement $advertisement) {
 
+    // Only approved advertisements can be contacted
     if ($advertisement->status !== 'approved') {
         abort(404);
     }
@@ -84,6 +92,7 @@ Route::get('/advertisements/{advertisement}/contact', function (Advertisement $a
     return view('advertisements.contact', compact('advertisement'));
 
 })->middleware('auth')->name('contact.seller');
+
 
 // Send first message to seller
 Route::post('/advertisements/{advertisement}/contact', [MessageController::class, 'send'])
@@ -102,17 +111,20 @@ Route::get('/messages', [MessageController::class, 'inbox'])
     ->middleware('auth')
     ->name('messages.inbox');
 
-// Open conversation
+
+// Open a conversation
 Route::get('/messages/{advertisement}/{other_user}', [MessageController::class, 'conversation'])
     ->middleware('auth')
     ->name('messages.conversation');
 
-// Send message inside conversation
+
+// Send message inside an existing conversation
 Route::post('/messages/{advertisement}/{other_user}', [MessageController::class, 'sendMessage'])
     ->middleware('auth')
     ->name('messages.send');
 
-// Reply to a message
+
+// Reply to an existing message
 Route::post('/messages/{message}/reply', [MessageController::class, 'reply'])
     ->middleware(['auth', 'role:advertiser'])
     ->name('messages.reply');
@@ -125,7 +137,9 @@ Route::post('/messages/{message}/reply', [MessageController::class, 'reply'])
 */
 
 Route::get('/dashboard', function () {
+
     return view('dashboard');
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -160,20 +174,24 @@ Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.dashboard');
 
+
 // Manage users
 Route::get('/admin/users', [AdminUserController::class, 'index'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.index');
+
 
 // Update user role
 Route::patch('/admin/users/{user}/role', [AdminUserController::class, 'updateRole'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.updateRole');
 
+
 // Approve advertisement
 Route::patch('/admin/advertisements/{advertisement}/approve', [AdminController::class, 'approve'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.advertisements.approve');
+
 
 // Reject advertisement
 Route::patch('/admin/advertisements/{advertisement}/reject', [AdminController::class, 'reject'])
@@ -189,12 +207,8 @@ Route::patch('/admin/advertisements/{advertisement}/reject', [AdminController::c
 
 // Advertiser dashboard
 Route::get('/advertiser/dashboard', [AdvertiserController::class, 'dashboard'])
-    ->middleware('auth')
+    ->middleware(['auth', 'role:advertiser'])
     ->name('advertiser.dashboard');
-
-Route::get('/advertisor/dashboard', [AdvertiserController::class, 'dashboard'])
-    ->middleware('auth')
-    ->name('advertisor.dashboard');
 
 
 /*
