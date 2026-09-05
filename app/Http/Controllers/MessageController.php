@@ -14,18 +14,22 @@ class MessageController extends Controller
      */
     public function send(Request $request, Advertisement $advertisement)
     {
+        // Advertisement must be approved.
         if ($advertisement->status !== 'approved') {
             abort(404);
         }
 
+        // Seller cannot message themselves.
         if (auth()->id() === $advertisement->user_id) {
             abort(403, 'You cannot message yourself.');
         }
 
+        // Validate message.
         $validated = $request->validate([
             'message' => 'required|string|max:2000',
         ]);
 
+        // Create the message.
         Message::create([
             'sender_id' => auth()->id(),
             'receiver_id' => $advertisement->user_id,
@@ -44,6 +48,7 @@ class MessageController extends Controller
      */
     public function reply(Request $request, Message $message)
     {
+        // Only the receiver can reply.
         if ($message->receiver_id !== auth()->id()) {
             abort(403, 'You are not allowed to reply to this message.');
         }
@@ -66,7 +71,7 @@ class MessageController extends Controller
 
 
     /**
-     * Show the user's message inbox.
+     * Show the user's inbox.
      */
     public function inbox()
     {
@@ -99,46 +104,25 @@ class MessageController extends Controller
         Advertisement $advertisement,
         User $other_user
     ) {
-        /*
-        |--------------------------------------------------------------------------
-        | Check advertisement
-        |--------------------------------------------------------------------------
-        */
-
+        // Advertisement must be approved.
         if ($advertisement->status !== 'approved') {
             abort(404);
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | The other user cannot be the logged-in user
-        |--------------------------------------------------------------------------
-        */
-
+        // Cannot have a conversation with yourself.
         if (auth()->id() === $other_user->id) {
             abort(403, 'Invalid conversation.');
         }
 
-
         /*
-        |--------------------------------------------------------------------------
-        | The other user must be the advertisement owner
-        |--------------------------------------------------------------------------
-        */
-
-        if ($other_user->id !== $advertisement->user_id) {
-            abort(403, 'This user is not the seller of this advertisement.');
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Check that logged-in user is actually part of this conversation
-        |--------------------------------------------------------------------------
-        */
-
-        $conversationExists = Message::where('advertisement_id', $advertisement->id)
+         * Check that a conversation actually exists
+         * between the logged-in user and the other user
+         * for this advertisement.
+         */
+        $conversationExists = Message::where(
+            'advertisement_id',
+            $advertisement->id
+        )
             ->where(function ($query) use ($other_user) {
 
                 $query->where(function ($q) use ($other_user) {
@@ -146,8 +130,7 @@ class MessageController extends Controller
                     $q->where('sender_id', auth()->id())
                         ->where('receiver_id', $other_user->id);
 
-                })
-                ->orWhere(function ($q) use ($other_user) {
+                })->orWhere(function ($q) use ($other_user) {
 
                     $q->where('sender_id', $other_user->id)
                         ->where('receiver_id', auth()->id());
@@ -157,18 +140,15 @@ class MessageController extends Controller
             })
             ->exists();
 
-
+        // Conversation does not belong to these users.
         if (!$conversationExists) {
             abort(403, 'Conversation not found.');
         }
 
-
         /*
-        |--------------------------------------------------------------------------
-        | Mark received messages as read
-        |--------------------------------------------------------------------------
-        */
-
+         * Mark messages received from the other user
+         * as read.
+         */
         Message::where('advertisement_id', $advertisement->id)
             ->where('sender_id', $other_user->id)
             ->where('receiver_id', auth()->id())
@@ -177,13 +157,10 @@ class MessageController extends Controller
                 'read_at' => now(),
             ]);
 
-
         /*
-        |--------------------------------------------------------------------------
-        | Get conversation messages
-        |--------------------------------------------------------------------------
-        */
-
+         * Get all messages between the two users
+         * for this advertisement.
+         */
         $messages = Message::where(
             'advertisement_id',
             $advertisement->id
@@ -195,8 +172,7 @@ class MessageController extends Controller
                     $q->where('sender_id', auth()->id())
                         ->where('receiver_id', $other_user->id);
 
-                })
-                ->orWhere(function ($q) use ($other_user) {
+                })->orWhere(function ($q) use ($other_user) {
 
                     $q->where('sender_id', $other_user->id)
                         ->where('receiver_id', auth()->id());
@@ -210,7 +186,6 @@ class MessageController extends Controller
             ])
             ->oldest()
             ->get();
-
 
         return view(
             'messages.conversation',
@@ -231,46 +206,24 @@ class MessageController extends Controller
         Advertisement $advertisement,
         User $other_user
     ) {
-        /*
-        |--------------------------------------------------------------------------
-        | Check advertisement
-        |--------------------------------------------------------------------------
-        */
-
+        // Advertisement must be approved.
         if ($advertisement->status !== 'approved') {
             abort(404);
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Cannot message yourself
-        |--------------------------------------------------------------------------
-        */
-
+        // Cannot message yourself.
         if (auth()->id() === $other_user->id) {
             abort(403, 'You cannot message yourself.');
         }
 
-
         /*
-        |--------------------------------------------------------------------------
-        | The other user must be the advertisement owner
-        |--------------------------------------------------------------------------
-        */
-
-        if ($other_user->id !== $advertisement->user_id) {
-            abort(403, 'This user is not the seller of this advertisement.');
-        }
-
-
-        /*
-        |--------------------------------------------------------------------------
-        | Make sure logged-in user is part of the conversation
-        |--------------------------------------------------------------------------
-        */
-
-        $conversationExists = Message::where('advertisement_id', $advertisement->id)
+         * Make sure an existing conversation exists
+         * between these two users for this advertisement.
+         */
+        $conversationExists = Message::where(
+            'advertisement_id',
+            $advertisement->id
+        )
             ->where(function ($query) use ($other_user) {
 
                 $query->where(function ($q) use ($other_user) {
@@ -278,8 +231,7 @@ class MessageController extends Controller
                     $q->where('sender_id', auth()->id())
                         ->where('receiver_id', $other_user->id);
 
-                })
-                ->orWhere(function ($q) use ($other_user) {
+                })->orWhere(function ($q) use ($other_user) {
 
                     $q->where('sender_id', $other_user->id)
                         ->where('receiver_id', auth()->id());
@@ -289,36 +241,22 @@ class MessageController extends Controller
             })
             ->exists();
 
-
         if (!$conversationExists) {
             abort(403, 'Conversation not found.');
         }
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Validate message
-        |--------------------------------------------------------------------------
-        */
-
+        // Validate the new message.
         $validated = $request->validate([
             'message' => 'required|string|max:2000',
         ]);
 
-
-        /*
-        |--------------------------------------------------------------------------
-        | Save message
-        |--------------------------------------------------------------------------
-        */
-
+        // Save the message.
         Message::create([
             'sender_id' => auth()->id(),
             'receiver_id' => $other_user->id,
             'advertisement_id' => $advertisement->id,
             'message' => $validated['message'],
         ]);
-
 
         return back()->with('success', 'Message sent!');
     }

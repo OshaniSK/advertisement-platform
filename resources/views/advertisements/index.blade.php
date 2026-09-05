@@ -7,7 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Advertisements</title>
+    <title>Browse Advertisements</title>
 
     <style>
 
@@ -18,21 +18,26 @@
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background: #f5f6f8;
-            color: #222;
+            background: #f3f4f6;
+            color: #111827;
         }
 
-        /* HEADER */
+        /* =========================
+           HEADER
+        ========================= */
 
         .header {
-            background: white;
+            background: #ffffff;
             border-bottom: 1px solid #e5e7eb;
-            padding: 18px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .header-inner {
-            max-width: 1200px;
+            max-width: 1250px;
             margin: auto;
+            padding: 16px 25px;
 
             display: flex;
             justify-content: space-between;
@@ -40,54 +45,111 @@
         }
 
         .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #111827;
             text-decoration: none;
+            font-size: 22px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .logo span {
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .header-link {
-            color: #374151;
             text-decoration: none;
-            margin-left: 20px;
+            color: #374151;
             font-size: 14px;
+            font-weight: 600;
+            padding: 9px 13px;
+            border-radius: 7px;
         }
 
-        /* MAIN */
+        .header-link:hover {
+            background: #f3f4f6;
+        }
+
+        .login-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .login-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
 
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            max-width: 1250px;
+            margin: auto;
+            padding: 35px 25px 60px;
         }
 
-        .page-title {
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            background: linear-gradient(
+                135deg,
+                #1d4ed8,
+                #2563eb
+            );
+
+            color: white;
+
+            border-radius: 16px;
+
+            padding: 38px;
+
             margin-bottom: 25px;
+
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.18);
         }
 
-        .page-title h1 {
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+        }
+
+        .hero p {
             margin: 0;
-            font-size: 30px;
-            color: #111827;
+            color: #dbeafe;
+            font-size: 16px;
         }
 
-        .page-title p {
-            color: #6b7280;
-            margin-top: 8px;
-        }
-
-        /* SEARCH BOX */
+        /* =========================
+           FILTER BOX
+        ========================= */
 
         .filter-box {
             background: white;
+
             padding: 22px;
 
-            border-radius: 12px;
+            border-radius: 14px;
 
-            box-shadow:
-                0 3px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
 
             margin-bottom: 30px;
+        }
+
+        .filter-title {
+            margin: 0 0 18px;
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #111827;
         }
 
         .search-row {
@@ -112,6 +174,18 @@
             align-items: end;
         }
 
+        .filter-label {
+            display: block;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            color: #374151;
+
+            margin-bottom: 6px;
+        }
+
         input,
         select {
             width: 100%;
@@ -120,7 +194,7 @@
 
             border: 1px solid #d1d5db;
 
-            border-radius: 7px;
+            border-radius: 8px;
 
             font-size: 14px;
 
@@ -132,26 +206,20 @@
             outline: none;
 
             border-color: #2563eb;
-        }
 
-        .filter-label {
-            display: block;
-
-            font-size: 13px;
-
-            font-weight: bold;
-
-            color: #374151;
-
-            margin-bottom: 6px;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
         }
 
         .button {
-            display: inline-block;
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
 
             padding: 12px 20px;
 
-            border-radius: 7px;
+            border-radius: 8px;
 
             border: none;
 
@@ -161,11 +229,14 @@
 
             font-size: 14px;
 
-            font-weight: bold;
+            font-weight: 700;
+
+            min-height: 44px;
         }
 
         .search-button {
             background: #2563eb;
+
             color: white;
         }
 
@@ -175,6 +246,7 @@
 
         .clear-button {
             background: #f3f4f6;
+
             color: #374151;
         }
 
@@ -182,7 +254,9 @@
             background: #e5e7eb;
         }
 
-        /* RESULTS HEADER */
+        /* =========================
+           RESULTS HEADER
+        ========================= */
 
         .results-header {
             display: flex;
@@ -197,7 +271,7 @@
         .results-header h2 {
             margin: 0;
 
-            font-size: 20px;
+            font-size: 21px;
         }
 
         .result-count {
@@ -206,7 +280,9 @@
             font-size: 14px;
         }
 
-        /* ADVERTISEMENT GRID */
+        /* =========================
+           ADVERTISEMENT GRID
+        ========================= */
 
         .advertisement-grid {
             display: grid;
@@ -217,12 +293,14 @@
             gap: 22px;
         }
 
-        /* CARD */
+        /* =========================
+           CARD
+        ========================= */
 
         .card {
             background: white;
 
-            border-radius: 12px;
+            border-radius: 14px;
 
             overflow: hidden;
 
@@ -230,23 +308,27 @@
                 0 3px 15px rgba(0, 0, 0, 0.06);
 
             transition:
-                transform 0.2s,
-                box-shadow 0.2s;
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+
+            border: 1px solid #f0f0f0;
         }
 
         .card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-5px);
 
             box-shadow:
-                0 8px 25px rgba(0, 0, 0, 0.10);
+                0 12px 30px rgba(0, 0, 0, 0.10);
         }
 
-        /* IMAGE */
+        /* =========================
+           IMAGE
+        ========================= */
 
         .card-image {
             width: 100%;
 
-            height: 220px;
+            height: 230px;
 
             background: #f3f4f6;
 
@@ -257,6 +339,8 @@
             justify-content: center;
 
             overflow: hidden;
+
+            position: relative;
         }
 
         .card-image img {
@@ -265,6 +349,12 @@
             height: 100%;
 
             object-fit: cover;
+
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.04);
         }
 
         .no-image {
@@ -273,7 +363,9 @@
             font-size: 14px;
         }
 
-        /* CARD CONTENT */
+        /* =========================
+           CARD CONTENT
+        ========================= */
 
         .card-content {
             padding: 18px;
@@ -292,19 +384,19 @@
 
             font-size: 11px;
 
-            font-weight: bold;
+            font-weight: 700;
 
             margin-bottom: 10px;
         }
 
         .card-title {
-            font-size: 19px;
+            font-size: 18px;
 
-            font-weight: bold;
+            font-weight: 700;
 
             color: #111827;
 
-            margin: 0 0 10px;
+            margin: 0 0 9px;
 
             white-space: nowrap;
 
@@ -316,17 +408,17 @@
         .price {
             font-size: 21px;
 
-            font-weight: bold;
+            font-weight: 800;
 
             color: #111827;
 
-            margin-bottom: 10px;
+            margin-bottom: 9px;
         }
 
         .location {
             color: #6b7280;
 
-            font-size: 14px;
+            font-size: 13px;
 
             margin-bottom: 12px;
         }
@@ -334,15 +426,15 @@
         .description {
             color: #6b7280;
 
-            font-size: 14px;
+            font-size: 13px;
 
             line-height: 1.5;
 
-            height: 42px;
+            height: 40px;
 
             overflow: hidden;
 
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .view-button {
@@ -358,40 +450,58 @@
 
             padding: 11px;
 
-            border-radius: 7px;
+            border-radius: 8px;
 
             text-decoration: none;
 
             font-size: 14px;
 
-            font-weight: bold;
+            font-weight: 700;
+
+            transition: background 0.2s;
         }
 
         .view-button:hover {
             background: #1d4ed8;
         }
 
-        /* EMPTY */
+        /* =========================
+           EMPTY STATE
+        ========================= */
 
         .empty {
             background: white;
 
-            padding: 50px 20px;
+            padding: 60px 20px;
 
             text-align: center;
 
-            border-radius: 12px;
+            border-radius: 14px;
+
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 12px;
         }
 
         .empty h3 {
-            margin-bottom: 8px;
+            margin: 0 0 8px;
+
+            font-size: 20px;
         }
 
         .empty p {
             color: #6b7280;
+
+            margin-bottom: 20px;
         }
 
-        /* PAGINATION */
+        /* =========================
+           PAGINATION
+        ========================= */
 
         .pagination {
             margin-top: 35px;
@@ -401,9 +511,11 @@
             justify-content: center;
         }
 
-        /* RESPONSIVE */
+        /* =========================
+           RESPONSIVE
+        ========================= */
 
-        @media (max-width: 900px) {
+        @media (max-width: 950px) {
 
             .advertisement-grid {
                 grid-template-columns:
@@ -422,29 +534,34 @@
 
         }
 
-        @media (max-width: 600px) {
-
-            .header {
-                padding: 15px 20px;
-            }
+        @media (max-width: 650px) {
 
             .header-inner {
+                padding: 14px 18px;
+
                 flex-direction: column;
 
-                gap: 12px;
-
                 align-items: flex-start;
+
+                gap: 12px;
             }
 
-            .header-link {
-                margin-left: 0;
+            .nav-links {
+                width: 100%;
 
-                margin-right: 15px;
+                flex-wrap: wrap;
             }
 
-            .advertisement-grid {
-                grid-template-columns:
-                    1fr;
+            .container {
+                padding: 25px 15px 50px;
+            }
+
+            .hero {
+                padding: 28px 22px;
+            }
+
+            .hero h1 {
+                font-size: 27px;
             }
 
             .search-row,
@@ -453,8 +570,17 @@
                     1fr;
             }
 
-            .page-title h1 {
-                font-size: 25px;
+            .advertisement-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .results-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 5px;
             }
 
         }
@@ -467,7 +593,9 @@
 <body>
 
 
-<!-- HEADER -->
+<!-- =========================
+     HEADER
+========================= -->
 
 <header class="header">
 
@@ -477,10 +605,11 @@
             href="{{ route('advertisements.index') }}"
             class="logo"
         >
-            Advertisement Platform
+            Advertisement <span>Platform</span>
         </a>
 
-        <div>
+
+        <div class="nav-links">
 
             @auth
 
@@ -493,6 +622,13 @@
                         My Dashboard
                     </a>
 
+                    <a
+                        href="{{ route('messages.inbox') }}"
+                        class="header-link"
+                    >
+                        💬 Messages
+                    </a>
+
                 @elseif (auth()->user()->role === 'visitor')
 
                     <a
@@ -500,6 +636,13 @@
                         class="header-link"
                     >
                         My Dashboard
+                    </a>
+
+                    <a
+                        href="{{ route('messages.inbox') }}"
+                        class="header-link"
+                    >
+                        💬 Messages
                     </a>
 
                 @elseif (auth()->user()->role === 'admin')
@@ -524,7 +667,7 @@
 
                 <a
                     href="{{ route('register') }}"
-                    class="header-link"
+                    class="header-link login-button"
                 >
                     Register
                 </a>
@@ -538,29 +681,40 @@
 </header>
 
 
-<!-- MAIN -->
+<!-- =========================
+     MAIN
+========================= -->
 
 <main class="container">
 
 
-    <!-- TITLE -->
+    <!-- =========================
+         HERO
+    ========================= -->
 
-    <div class="page-title">
+    <section class="hero">
 
         <h1>
             Find What You Need
         </h1>
 
         <p>
-            Browse advertisements from sellers.
+            Discover great products and services from sellers.
         </p>
 
-    </div>
+    </section>
 
 
-    <!-- FILTERS -->
+    <!-- =========================
+         FILTERS
+    ========================= -->
 
-    <div class="filter-box">
+    <section class="filter-box">
+
+        <h2 class="filter-title">
+            🔎 Search & Filter
+        </h2>
+
 
         <form
             method="GET"
@@ -586,7 +740,7 @@
                         type="text"
                         id="search"
                         name="search"
-                        placeholder="Search advertisements..."
+                        placeholder="What are you looking for?"
                         value="{{ request('search') }}"
                     >
 
@@ -715,7 +869,7 @@
                     type="submit"
                     class="button search-button"
                 >
-                    Search
+                    🔍 Search
                 </button>
 
 
@@ -732,10 +886,12 @@
 
         </form>
 
-    </div>
+    </section>
 
 
-    <!-- RESULTS HEADER -->
+    <!-- =========================
+         RESULTS HEADER
+    ========================= -->
 
     <div class="results-header">
 
@@ -754,7 +910,9 @@
     </div>
 
 
-    <!-- ADVERTISEMENTS -->
+    <!-- =========================
+         ADVERTISEMENTS
+    ========================= -->
 
     @if ($advertisements->count() > 0)
 
@@ -782,7 +940,7 @@
                         @else
 
                             <span class="no-image">
-                                No Image Available
+                                📷 No Image Available
                             </span>
 
                         @endif
@@ -855,7 +1013,7 @@
                             href="{{ route('advertisements.show', $advertisement) }}"
                             class="view-button"
                         >
-                            View Details
+                            View Details →
                         </a>
 
 
@@ -871,7 +1029,9 @@
         </div>
 
 
-        <!-- PAGINATION -->
+        <!-- =========================
+             PAGINATION
+        ========================= -->
 
         <div class="pagination">
 
@@ -883,9 +1043,15 @@
     @else
 
 
-        <!-- NO RESULTS -->
+        <!-- =========================
+             EMPTY STATE
+        ========================= -->
 
         <div class="empty">
+
+            <div class="empty-icon">
+                🔍
+            </div>
 
             <h3>
                 No advertisements found
@@ -894,8 +1060,6 @@
             <p>
                 No advertisements match your search or filters.
             </p>
-
-            <br>
 
             <a
                 href="{{ route('advertisements.index') }}"
