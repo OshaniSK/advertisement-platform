@@ -2,30 +2,29 @@
 
 namespace App\Models;
 
-use App\Models\Favorite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Advertisement extends Model
+class Favorite extends Model
 {
     protected $fillable = [
         'user_id',
-        'title',
-        'description',
-        'price',
-        'category',
-        'location',
-        'image',
-        'status',
+        'advertisement_id',
     ];
 
+    /**
+     * The user who favorited the advertisement.
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function favorites()
+    /**
+     * The favorited advertisement.
+     */
+    public function advertisement(): BelongsTo
     {
-        return $this->hasMany(Favorite::class);
+        return $this->belongsTo(Advertisement::class);
     }
 }

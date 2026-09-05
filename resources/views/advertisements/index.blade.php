@@ -920,10 +920,76 @@
         <div class="advertisement-grid">
 
 
-            @foreach ($advertisements as $advertisement)
+    @foreach ($advertisements as $advertisement)
 
 
-                <article class="card">
+         <article class="card">
+                 @if (auth()->check())
+    @php
+        $isFavorite = \App\Models\Favorite::where('user_id', auth()->id())
+            ->where('advertisement_id', $advertisement->id)
+            ->exists();
+    @endphp
+
+    <div style="text-align: right; padding: 12px 15px 0;">
+        @if ($isFavorite)
+
+            <form
+                action="{{ route('favorites.destroy', $advertisement) }}"
+                method="POST"
+                style="display: inline;"
+            >
+                @csrf
+                @method('DELETE')
+
+                <button
+                    type="submit"
+                    style="
+                        border: none;
+                        background: #fee2e2;
+                        color: #dc2626;
+                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        font-size: 20px;
+                        cursor: pointer;
+                    "
+                    title="Remove from favorites"
+                >
+                    ❤️
+                </button>
+            </form>
+
+        @else
+
+            <form
+                action="{{ route('favorites.store', $advertisement) }}"
+                method="POST"
+                style="display: inline;"
+            >
+                @csrf
+
+                <button
+                    type="submit"
+                    style="
+                        border: 1px solid #d1d5db;
+                        background: white;
+                        color: #6b7280;
+                        border-radius: 50%;
+                        width: 40px;
+                        height: 40px;
+                        font-size: 20px;
+                        cursor: pointer;
+                    "
+                    title="Add to favorites"
+                >
+                    ♡
+                </button>
+            </form>
+
+        @endif
+    </div>
+@endif
 
 
                     <!-- IMAGE -->

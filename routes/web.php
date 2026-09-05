@@ -7,6 +7,7 @@ use App\Http\Controllers\AdvertiserController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\FavoriteController;
 use App\Models\Advertisement;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +74,20 @@ Route::put('/advertisements/{advertisement}', [AdvertisementController::class, '
 Route::delete('/advertisements/{advertisement}', [AdvertisementController::class, 'destroy'])
     ->middleware(['auth', 'role:advertiser'])
     ->name('advertisements.destroy');
+
+    /* Favorites */
+Route::get('/favorites', [FavoriteController::class, 'index'])
+    ->middleware(['auth', 'role:visitor'])
+    ->name('favorites.index');
+
+Route::post('/advertisements/{advertisement}/favorite', [FavoriteController::class, 'store'])
+    ->middleware('auth')
+    ->name('favorites.store');
+
+Route::delete('/advertisements/{advertisement}/favorite', [FavoriteController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('favorites.destroy');
+
 
 
 /*

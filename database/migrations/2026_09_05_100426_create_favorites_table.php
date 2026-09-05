@@ -13,7 +13,23 @@ return new class extends Migration
     {
         Schema::create('favorites', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('advertisement_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->timestamps();
+
+            // Prevent the same user from
+            // favoriting the same advertisement twice.
+            $table->unique([
+                'user_id',
+                'advertisement_id'
+            ]);
         });
     }
 
