@@ -1,69 +1,601 @@
-<x-app-layout>
+```blade
+<!DOCTYPE html>
+<html lang="en">
 
-    <x-slot name="header">
+<head>
 
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Notifications') }}
-        </h2>
+    <meta charset="UTF-8">
 
-    </x-slot>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notifications</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f6f8;
+            color: #111827;
+        }
+
+        /* ================= HEADER ================= */
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 18px 40px;
+        }
+
+        .header-inner {
+            max-width: 1000px;
+            margin: auto;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: #111827;
+            text-decoration: none;
+        }
+
+        .header-links {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-link {
+            color: #374151;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .header-link:hover {
+            color: #2563eb;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* ================= PAGE HEADER ================= */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 30px;
+            color: #111827;
+        }
+
+        .page-subtitle {
+            margin: 7px 0 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        /* ================= BUTTON ================= */
+
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .back-button {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .back-button:hover {
+            background: #e5e7eb;
+        }
+
+        .read-all-button {
+            background: #2563eb;
+            color: white;
+        }
+
+        .read-all-button:hover {
+            background: #1d4ed8;
+        }
+
+        /* ================= ALERTS ================= */
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            padding: 13px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        /* ================= NOTIFICATION CARD ================= */
+
+        .notifications-box {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+
+            box-shadow:
+                0 3px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .notification {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+
+            gap: 20px;
+
+            transition: background 0.2s;
+        }
+
+        .notification:last-child {
+            border-bottom: none;
+        }
+
+        .notification:hover {
+            background: #f9fafb;
+        }
+
+        /* ================= UNREAD ================= */
+
+        .notification.unread {
+            background: #eff6ff;
+        }
+
+        .notification.unread:hover {
+            background: #dbeafe;
+        }
+
+        /* ================= ICON ================= */
+
+        .notification-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 50%;
+
+            background: #dbeafe;
+            color: #2563eb;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-size: 20px;
+
+            flex-shrink: 0;
+        }
+
+        .notification.unread .notification-icon {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            margin: 0 0 7px;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            color: #111827;
+        }
+
+        .notification-message {
+            margin: 0 0 8px;
+
+            color: #4b5563;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+        .notification-time {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        /* ================= STATUS ================= */
+
+        .notification-status {
+            margin-top: 2px;
+
+            padding: 4px 9px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .status-unread {
+            background: #dc2626;
+            color: white;
+        }
+
+        .status-read {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        /* ================= ACTIONS ================= */
+
+        .notification-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            align-items: flex-end;
+        }
+
+        .open-button {
+            background: #111827;
+            color: white;
+        }
+
+        .open-button:hover {
+            background: #374151;
+        }
+
+        .mark-read-button {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .mark-read-button:hover {
+            background: #e5e7eb;
+        }
+
+        /* ================= EMPTY ================= */
+
+        .empty {
+            background: white;
+
+            padding: 60px 20px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            box-shadow:
+                0 3px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            margin: 0 0 8px;
+            font-size: 20px;
+        }
+
+        .empty p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        /* ================= PAGINATION ================= */
+
+        .pagination {
+            margin-top: 25px;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 700px) {
+
+            .header {
+                padding: 15px 20px;
+            }
+
+            .header-inner {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .notification {
+                flex-direction: column;
+            }
+
+            .notification-actions {
+                width: 100%;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            .notification-actions .button {
+                flex: 1;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
 
 
-    <div class="py-12 bg-gray-50 min-h-screen">
+<body>
 
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
-            {{-- Success Message --}}
-            @if(session('success'))
+<!-- ================= HEADER ================= -->
 
-                <div class="mb-6 bg-green-100 border border-green-300 text-green-800 px-4 py-3 rounded-lg">
-                    {{ session('success') }}
-                </div>
+<header class="header">
+
+    <div class="header-inner">
+
+        <a
+            href="{{ route('home') }}"
+            class="logo"
+        >
+            Advertisement Platform
+        </a>
+
+
+        <div class="header-links">
+
+            @if (auth()->user()->role === 'advertiser')
+
+                <a
+                    href="{{ route('advertiser.dashboard') }}"
+                    class="header-link"
+                >
+                    Dashboard
+                </a>
+
+            @elseif (auth()->user()->role === 'visitor')
+
+                <a
+                    href="{{ route('visitor.dashboard') }}"
+                    class="header-link"
+                >
+                    Dashboard
+                </a>
+
+            @elseif (auth()->user()->role === 'admin')
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="header-link"
+                >
+                    Dashboard
+                </a>
 
             @endif
 
+        </div>
 
-            <div class="bg-white shadow-sm sm:rounded-lg overflow-hidden">
+    </div>
 
-                {{-- Header --}}
-                <div class="px-6 py-5 border-b border-gray-200">
+</header>
 
-                    <div class="flex items-center justify-between">
 
-                        <div>
+<!-- ================= MAIN ================= -->
 
-                            <h1 class="text-xl font-bold text-gray-800">
-                                🔔 Notifications
-                            </h1>
+<main class="container">
 
-                            <p class="text-sm text-gray-500 mt-1">
-                                Stay updated with activity on your account.
-                            </p>
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1 class="page-title">
+                Notifications
+            </h1>
+
+            <p class="page-subtitle">
+                Stay updated with your latest activity.
+            </p>
+
+        </div>
+
+
+        @if (auth()->user()->unreadNotifications()->count() > 0)
+
+            <form
+                method="POST"
+                action="{{ route('notifications.readAll') }}"
+            >
+
+                @csrf
+
+                <button
+                    type="submit"
+                    class="button read-all-button"
+                >
+                    ✓ Mark All as Read
+                </button>
+
+            </form>
+
+        @endif
+
+    </div>
+
+
+    <!-- ================= SUCCESS ================= -->
+
+    @if (session('success'))
+
+        <div class="success">
+            {{ session('success') }}
+        </div>
+
+    @endif
+
+
+    <!-- ================= ERROR ================= -->
+
+    @if (session('error'))
+
+        <div class="error">
+            {{ session('error') }}
+        </div>
+
+    @endif
+
+
+    <!-- ================= NOTIFICATIONS ================= -->
+
+    @if ($notifications->count() > 0)
+
+        <div class="notifications-box">
+
+
+            @foreach ($notifications as $notification)
+
+                <div
+                    class="notification
+                    {{ $notification->read_at === null ? 'unread' : '' }}"
+                >
+
+
+                    <!-- ICON -->
+
+                    <div class="notification-icon">
+                        🔔
+                    </div>
+
+
+                    <!-- CONTENT -->
+
+                    <div class="notification-content">
+
+                        <h3 class="notification-title">
+
+                            {{ $notification->data['sender_name'] ?? 'New Notification' }}
+
+                        </h3>
+
+
+                        <p class="notification-message">
+
+                            {{ $notification->data['message'] ?? 'You have a new notification.' }}
+
+                        </p>
+
+
+                        <div class="notification-time">
+
+                            {{ $notification->created_at->format('M d, Y • h:i A') }}
 
                         </div>
 
+                    </div>
 
-                        @if(auth()->user()->unreadNotifications()->count() > 0)
+
+                    <!-- STATUS + ACTIONS -->
+
+                    <div class="notification-actions">
+
+
+                        @if ($notification->read_at === null)
+
+                            <span class="notification-status status-unread">
+                                Unread
+                            </span>
+
+                        @else
+
+                            <span class="notification-status status-read">
+                                Read
+                            </span>
+
+                        @endif
+
+
+                        @if (
+                            isset($notification->data['advertisement_id']) &&
+                            isset($notification->data['sender_id'])
+                        )
+
+                            <a
+                                href="{{ route('notifications.open', $notification->id) }}"
+                                class="button open-button"
+                            >
+                                Open
+                            </a>
+
+                        @endif
+
+
+                        @if ($notification->read_at === null)
 
                             <form
-                                action="{{ route('notifications.readAll') }}"
                                 method="POST"
+                                action="{{ route('notifications.read', $notification->id) }}"
                             >
 
                                 @csrf
 
                                 <button
                                     type="submit"
-                                    class="px-4 py-2
-                                           bg-blue-600
-                                           text-white
-                                           text-sm
-                                           font-semibold
-                                           rounded-md
-                                           hover:bg-blue-700
-                                           transition"
+                                    class="button mark-read-button"
                                 >
-                                    Mark All as Read
+                                    Mark Read
                                 </button>
 
                             </form>
@@ -72,224 +604,52 @@
 
                     </div>
 
-                </div>
-
-
-                {{-- Notification List --}}
-                <div>
-
-                    @forelse($notifications as $notification)
-
-                        @php
-                            $data = $notification->data;
-
-                            $advertisementId =
-                                $data['advertisement_id'] ?? null;
-
-                            $senderId =
-                                $data['sender_id'] ?? null;
-
-                            $isUnread =
-                                is_null($notification->read_at);
-                        @endphp
-
-
-                        <div
-                            class="px-6 py-5
-                                   border-b border-gray-100
-                                   {{ $isUnread ? 'bg-blue-50' : 'bg-white' }}"
-                        >
-
-                            <div class="flex items-start">
-
-                                {{-- Icon --}}
-                                <div
-                                    class="flex-shrink-0
-                                           w-12 h-12
-                                           rounded-full
-                                           bg-blue-100
-                                           flex items-center justify-center
-                                           text-xl"
-                                >
-                                    💬
-                                </div>
-
-
-                                {{-- Notification Content --}}
-                                <div class="ml-4 flex-1">
-
-                                    <div class="flex items-start justify-between">
-
-                                        <div>
-
-                                            <h3 class="font-semibold text-gray-800">
-
-                                                @if(isset($data['sender_name']))
-
-                                                    {{ $data['sender_name'] }}
-
-                                                @else
-
-                                                    New Notification
-
-                                                @endif
-
-                                            </h3>
-
-
-                                            @if(isset($data['advertisement_title']))
-
-                                                <p class="text-sm text-gray-500 mt-1">
-
-                                                    {{ $data['advertisement_title'] }}
-
-                                                </p>
-
-                                            @endif
-
-                                        </div>
-
-
-                                        @if($isUnread)
-
-                                            <span
-                                                class="inline-flex
-                                                       items-center
-                                                       px-2 py-1
-                                                       text-xs
-                                                       font-semibold
-                                                       text-blue-700
-                                                       bg-blue-100
-                                                       rounded-full"
-                                            >
-                                                New
-                                            </span>
-
-                                        @endif
-
-                                    </div>
-
-
-                                    @if(isset($data['message']))
-
-                                        <p class="text-gray-600 text-sm mt-2">
-
-                                            {{ $data['message'] }}
-
-                                        </p>
-
-                                    @endif
-
-
-                                    <p class="text-xs text-gray-400 mt-2">
-
-                                        {{ $notification->created_at->diffForHumans() }}
-
-                                    </p>
-
-
-                                    {{-- Actions --}}
-                                    <div class="mt-3 flex flex-wrap gap-2">
-
-                                        @if($advertisementId && $senderId)
-
-                                            <a
-                                                href="{{ route('messages.conversation', [
-                                                    'advertisement' => $advertisementId,
-                                                    'other_user' => $senderId
-                                                ]) }}"
-                                                class="inline-flex
-                                                       items-center
-                                                       px-3 py-2
-                                                       bg-blue-600
-                                                       text-white
-                                                       text-xs
-                                                       font-semibold
-                                                       rounded-md
-                                                       hover:bg-blue-700"
-                                            >
-                                                Open Conversation
-                                            </a>
-
-                                        @endif
-
-
-                                        @if($isUnread)
-
-                                            <form
-                                                action="{{ route('notifications.read', $notification->id) }}"
-                                                method="POST"
-                                            >
-
-                                                @csrf
-
-                                                <button
-                                                    type="submit"
-                                                    class="inline-flex
-                                                           items-center
-                                                           px-3 py-2
-                                                           bg-gray-100
-                                                           text-gray-700
-                                                           text-xs
-                                                           font-semibold
-                                                           rounded-md
-                                                           hover:bg-gray-200"
-                                                >
-                                                    Mark as Read
-                                                </button>
-
-                                            </form>
-
-                                        @endif
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                    @empty
-
-                        {{-- Empty State --}}
-                        <div class="px-6 py-16 text-center">
-
-                            <div class="text-5xl mb-4">
-                                🔔
-                            </div>
-
-                            <h3 class="text-lg font-semibold text-gray-800">
-                                No Notifications
-                            </h3>
-
-                            <p class="text-gray-500 mt-2">
-                                You don't have any notifications yet.
-                            </p>
-
-                        </div>
-
-                    @endforelse
 
                 </div>
 
+            @endforeach
 
-                {{-- Pagination --}}
-                @if($notifications->hasPages())
-
-                    <div class="px-6 py-4 border-t border-gray-200">
-
-                        {{ $notifications->links() }}
-
-                    </div>
-
-                @endif
-
-            </div>
 
         </div>
 
-    </div>
 
-</x-app-layout>
+        <!-- PAGINATION -->
+
+        <div class="pagination">
+
+            {{ $notifications->links() }}
+
+        </div>
+
+
+    @else
+
+
+        <!-- EMPTY -->
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                🔔
+            </div>
+
+            <h3>
+                No Notifications
+            </h3>
+
+            <p>
+                You don't have any notifications yet.
+            </p>
+
+        </div>
+
+    @endif
+
+
+</main>
+
+
+</body>
+
+</html>
+

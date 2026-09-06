@@ -242,15 +242,25 @@ Route::get('/visitor/dashboard', [VisitorController::class, 'dashboard'])
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/notifications', [NotificationController::class, 'index'])
-        ->name('notifications.index');
+    Route::get(
+        '/notifications',
+        [NotificationController::class, 'index']
+    )->name('notifications.index');
 
-    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
-        ->name('notifications.read');
+    Route::get(
+        '/notifications/{notification}/open',
+        [NotificationController::class, 'open']
+    )->name('notifications.open');
 
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
-        ->name('notifications.readAll');
+    Route::post(
+        '/notifications/{notification}/read',
+        [NotificationController::class, 'markAsRead']
+    )->name('notifications.read');
 
+    Route::post(
+        '/notifications/read-all',
+        [NotificationController::class, 'markAllAsRead']
+    )->name('notifications.readAll');
 });
 
 
