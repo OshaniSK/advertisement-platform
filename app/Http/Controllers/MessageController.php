@@ -283,12 +283,31 @@ class MessageController extends Controller
             ->oldest()
             ->get();
 
+        /*
+        |--------------------------------------------------------------------------
+        | Get User's Conversations (for Sidebar)
+        |--------------------------------------------------------------------------
+        */
+
+        $conversations = Message::where('sender_id', auth()->id())
+            ->orWhere('receiver_id', auth()->id())
+            ->with(['sender', 'receiver', 'advertisement'])
+            ->latest()
+            ->get()
+            ->unique(function ($message) {
+                $otherUserId = (int) $message->sender_id === (int) auth()->id()
+                    ? $message->receiver_id
+                    : $message->sender_id;
+                return $message->advertisement_id . '-' . $otherUserId;
+            });
+
         return view(
             'messages.conversation',
             compact(
                 'advertisement',
                 'other_user',
-                'messages'
+                'messages',
+                'conversations'
             )
         );
     }
