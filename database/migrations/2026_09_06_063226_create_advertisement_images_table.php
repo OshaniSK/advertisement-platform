@@ -6,20 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('advertisement_images', function (Blueprint $table) {
             $table->id();
+
+            $table->foreignId('advertisement_id')
+                ->constrained('advertisements')
+                ->onDelete('cascade');
+
+            $table->string('image');
+
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('advertisement_images');

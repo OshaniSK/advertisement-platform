@@ -40,6 +40,11 @@ Route::get('/', function () {
 Route::get('/advertisements', [AdvertisementController::class, 'index'])
     ->name('advertisements.index');
 
+// Create advertisement page
+Route::get('/advertisements/create', [AdvertisementController::class, 'create'])
+    ->middleware(['auth', 'role:advertiser'])
+    ->name('advertisements.create');
+
 // View a single approved advertisement
 Route::get('/advertisements/{advertisement}', [AdvertisementController::class, 'show'])
     ->name('advertisements.show');
@@ -50,11 +55,6 @@ Route::get('/advertisements/{advertisement}', [AdvertisementController::class, '
 | Advertisements - Advertiser
 |--------------------------------------------------------------------------
 */
-
-// Create advertisement page
-Route::get('/advertisements/create', [AdvertisementController::class, 'create'])
-    ->middleware(['auth', 'role:advertiser'])
-    ->name('advertisements.create');
 
 // Store advertisement
 Route::post('/advertisements', [AdvertisementController::class, 'store'])
