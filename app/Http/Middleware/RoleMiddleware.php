@@ -18,14 +18,18 @@ class RoleMiddleware
         if (! $request->user()) {
             abort(403, 'Unauthorized');
         }
-        
+
         $userRole = strtolower(trim($request->user()->role));
         $allowedRoles = array_map(function($role) {
             return strtolower(trim($role));
         }, $roles);
 
         if (! in_array($userRole, $allowedRoles)) {
-            abort(403, 'Unauthorized');
+            return match ($userRole) {
+                'admin' => redirect()->route('admin.dashboard'),
+                'advertiser' => redirect()->route('advertiser.dashboard'),
+                default => redirect()->route('visitor.dashboard'),
+            };
         }
 
         return $next($request);
