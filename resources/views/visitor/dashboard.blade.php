@@ -1,296 +1,709 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visitor Dashboard - Advertisement Platform</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f3f4f6;
-            color: #111827;
-        }
-        /* Header */
-        .header {
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 18px 40px;
-        }
-        .header-inner {
-            max-width: 1200px;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo { font-size: 22px; font-weight: bold; color: #111827; text-decoration: none; }
-        .logo span { color: #2563eb; }
-        .header-actions { display: flex; align-items: center; gap: 20px; }
-        .header-link { color: #374151; text-decoration: none; font-size: 14px; font-weight: 600; }
-        .header-link:hover { color: #2563eb; }
-        
-        .logout-btn {
-            background: #fee2e2;
-            color: #dc2626;
-            border: none;
-            padding: 9px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-        .logout-btn:hover { background: #fecaca; }
 
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 35px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
-        }
+    <title>Visitor Dashboard | Advertisement Platform</title>
 
-        @media(max-width: 900px) {
-            .container { grid-template-columns: 1fr; }
-        }
-
-        /* Sections */
-        .section-title {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .view-all { font-size: 14px; color: #2563eb; text-decoration: none; font-weight: 600; }
-        .view-all:hover { text-decoration: underline; }
-
-        .card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.04);
-            margin-bottom: 30px;
-        }
-
-        /* Favorites Grid */
-        .favorites-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 20px;
-        }
-        .favorite-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            text-decoration: none;
-            color: inherit;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .favorite-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); }
-        .favorite-img { width: 100%; height: 160px; object-fit: cover; background: #f3f4f6; }
-        .favorite-info { padding: 18px; flex: 1; display: flex; flex-direction: column; }
-        .favorite-title { font-weight: 700; margin: 0 0 8px; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .favorite-price { color: #111827; font-weight: 800; font-size: 18px; margin: 0 0 15px; }
-        
-        .remove-favorite {
-            margin-top: auto;
-            background: #f3f4f6;
-            color: #4b5563;
-            border: 1px solid #e5e7eb;
-            padding: 9px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            transition: 0.2s;
-        }
-        .remove-favorite:hover { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
-
-        /* Messages List */
-        .message-list { display: flex; flex-direction: column; }
-        .message-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid #e5e7eb;
-            text-decoration: none;
-            color: inherit;
-            transition: 0.2s;
-        }
-        .message-item:last-child { border-bottom: none; }
-        .message-item:hover { background: #f9fafb; margin: 0 -15px; padding: 16px 15px; border-radius: 10px; border-bottom-color: transparent; }
-        .message-avatar {
-            width: 48px; height: 48px; border-radius: 50%; background: #2563eb; color: white;
-            display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; margin-right: 15px; flex-shrink: 0;
-        }
-        .message-content { flex: 1; min-width: 0; }
-        .message-name { font-weight: 700; margin: 0 0 5px; font-size: 15px; }
-        .message-ad { font-size: 13px; color: #6b7280; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0; }
-        
-        /* Notifications */
-        .notification-list { display: flex; flex-direction: column; gap: 12px; }
-        .notification-item {
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            display: flex;
-            gap: 15px;
-            background: white;
-            transition: 0.2s;
-            text-decoration: none;
-            color: inherit;
-        }
-        .notification-item:hover { background: #f9fafb; }
-        .notification-item.unread {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-        }
-        .notification-item.unread:hover { background: #dbeafe; }
-        
-        .notification-icon {
-            width: 40px; height: 40px; border-radius: 50%; background: #e5e7eb; color: #4b5563;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px;
-        }
-        .notification-item.unread .notification-icon { background: #2563eb; color: white; }
-        .notification-text { flex: 1; }
-        .notification-title { font-weight: 700; font-size: 14px; margin: 0 0 5px; }
-        .notification-desc { font-size: 13px; color: #4b5563; margin: 0 0 8px; line-height: 1.4; }
-        .notification-time { font-size: 11px; color: #9ca3af; font-weight: 600; }
-
-        .empty-state { text-align: center; padding: 40px 20px; color: #6b7280; font-size: 15px; background: #f9fafb; border-radius: 12px; border: 1px dashed #d1d5db; }
-        
-        .badge {
-            background: #ef4444; color: white; padding: 3px 9px; border-radius: 12px; font-size: 12px; font-weight: 800; margin-left: 8px;
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
 
-<header class="header">
-    <div class="header-inner">
-        <a href="{{ route('home') }}" class="logo">Advertisement <span>Platform</span></a>
-        <div class="header-actions">
-            <a href="{{ route('advertisements.index') }}" class="header-link">Browse Ads</a>
-            <form method="POST" action="{{ route('logout') }}" style="margin:0;">
-                @csrf
-                <button type="submit" class="logout-btn">Log Out</button>
-            </form>
+<body class="min-h-screen bg-slate-50 text-slate-800">
+
+    <!-- =========================================================
+         NAVIGATION BAR
+    ========================================================== -->
+
+    <nav class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+
+        <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+
+            <!-- Logo -->
+
+            <a href="{{ route('visitor.dashboard') }}"
+               class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-xl font-bold text-white shadow-sm">
+                    A
+                </div>
+
+                <div class="hidden sm:block">
+                    <div class="text-lg font-bold text-slate-900">
+                        Advertisement
+                    </div>
+
+                    <div class="-mt-1 text-xs font-medium text-indigo-600">
+                        PLATFORM
+                    </div>
+                </div>
+
+            </a>
+
+
+            <!-- Desktop Navigation -->
+
+            <div class="hidden items-center gap-7 md:flex">
+
+                <a href="{{ route('visitor.dashboard') }}"
+                   class="font-medium text-indigo-600 transition hover:text-indigo-700">
+                    Home
+                </a>
+
+                <a href="{{ route('advertisements.index') }}"
+                   class="font-medium text-slate-600 transition hover:text-indigo-600">
+                    Browse
+                </a>
+
+                <a href="{{ route('favorites.index') }}"
+                   class="font-medium text-slate-600 transition hover:text-indigo-600">
+                    Favorites
+                </a>
+
+                <a href="{{ route('messages.inbox') }}"
+                   class="font-medium text-slate-600 transition hover:text-indigo-600">
+                    Messages
+                </a>
+
+            </div>
+
+
+            <!-- Right Navigation -->
+
+            <div class="flex items-center gap-3">
+
+                <!-- Notification -->
+
+                <a href="{{ route('notifications.index') }}"
+                   class="relative flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-indigo-50 hover:text-indigo-600"
+                   title="Notifications">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         fill="none"
+                         viewBox="0 0 24 24"
+                         stroke-width="1.8"
+                         stroke="currentColor"
+                         class="h-5 w-5">
+
+                        <path stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M14.857 17.082a23.848 23.848 0 0 1-5.714 0m9.258-2.096a5.25 5.25 0 0 0-1.401-2.48V10.5a4.5 4.5 0 0 0-9 0v2.006a5.25 5.25 0 0 0-1.401 2.48c-.12.33.12.682.47.682h11.576c.35 0 .59-.352.47-.682ZM9.75 20.25h4.5" />
+
+                    </svg>
+
+
+                    @if($notificationCount > 0)
+
+                        <span class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+                            {{ $notificationCount > 99 ? '99+' : $notificationCount }}
+                        </span>
+
+                    @endif
+
+                </a>
+
+
+                <!-- User -->
+
+                <div class="hidden items-center gap-2 sm:flex">
+
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 font-bold text-indigo-700">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+
+                    <div class="max-w-32 truncate text-sm font-semibold text-slate-700">
+                        {{ $user->name }}
+                    </div>
+
+                </div>
+
+
+                <!-- Logout -->
+
+                <form method="POST" action="{{ route('logout') }}">
+
+                    @csrf
+
+                    <button type="submit"
+                            class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-red-50 hover:text-red-600">
+                        Logout
+                    </button>
+
+                </form>
+
+            </div>
+
         </div>
-    </div>
-</header>
 
-<div class="container">
-    
-    <!-- Left Column: Favorites -->
-    <div>
-        <div class="card">
-            <h2 class="section-title">
-                My Favorites
-                <a href="{{ route('favorites.index') }}" class="view-all">View All &rarr;</a>
-            </h2>
-            
-            @if($favorites->count() > 0)
-                <div class="favorites-grid">
-                    @foreach($favorites as $favorite)
-                        <a href="{{ route('advertisements.show', $favorite->advertisement) }}" class="favorite-card">
-                            @if($favorite->advertisement->image)
-                                <img src="{{ asset('storage/' . $favorite->advertisement->image) }}" class="favorite-img" alt="Ad">
-                            @else
-                                <div class="favorite-img" style="display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:14px;">No Image</div>
-                            @endif
-                            <div class="favorite-info">
-                                <p class="favorite-title">{{ $favorite->advertisement->title }}</p>
-                                <p class="favorite-price">Rs. {{ number_format($favorite->advertisement->price, 2) }}</p>
-                                
-                                <form action="{{ route('favorites.destroy', $favorite->advertisement) }}" method="POST" style="margin-top:auto;" onsubmit="event.stopPropagation();">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="remove-favorite">❤️ Remove</button>
-                                </form>
-                            </div>
+    </nav>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main>
+
+        <!-- =====================================================
+             HERO SECTION
+        ====================================================== -->
+
+        <section class="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-700">
+
+            <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+
+                <div class="max-w-3xl">
+
+                    <p class="mb-3 text-sm font-semibold uppercase tracking-wider text-indigo-200">
+                        Advertisement Platform
+                    </p>
+
+                    <h1 class="text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">
+                        Welcome back,
+                        {{ $user->name }}! 👋
+                    </h1>
+
+                    <p class="mt-5 max-w-2xl text-base leading-7 text-indigo-100 sm:text-lg">
+                        Find products, services and great deals from sellers on our platform.
+                    </p>
+
+                    <div class="mt-8">
+
+                        <a href="{{ route('advertisements.index') }}"
+                           class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3.5 font-semibold text-indigo-700 shadow-lg transition hover:-translate-y-0.5 hover:bg-indigo-50">
+
+                            Browse Advertisements
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2"
+                                 stroke="currentColor"
+                                 class="h-5 w-5">
+
+                                <path stroke-linecap="round"
+                                      stroke-linejoin="round"
+                                      d="M13.5 4.5 19.5 10.5 13.5 16.5M19 10.5H4.5" />
+
+                            </svg>
+
                         </a>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state">
-                    You haven't saved any advertisements yet.
-                </div>
-            @endif
-        </div>
-    </div>
 
-    <!-- Right Column: Messages & Notifications -->
-    <div>
-        <!-- Messages Section -->
-        <div class="card">
-            <h2 class="section-title">
-                <div style="display:flex;align-items:center;">
-                    My Messages @if($unreadMessages > 0)<span class="badge">{{ $unreadMessages }}</span>@endif
+                    </div>
+
                 </div>
-                <a href="{{ route('messages.inbox') }}" class="view-all">Inbox &rarr;</a>
-            </h2>
-            
-            @if($messages->count() > 0)
-                <div class="message-list">
-                    @foreach($messages as $message)
-                        @php
-                            $otherUser = (int)$message->sender_id === (int)auth()->id() ? $message->receiver : $message->sender;
-                            $initial = strtoupper(substr($otherUser->name ?? 'U', 0, 1));
-                        @endphp
-                        <a href="{{ route('messages.conversation', ['advertisement' => $message->advertisement_id, 'other_user' => $otherUser->id]) }}" class="message-item">
-                            <div class="message-avatar">{{ $initial }}</div>
-                            <div class="message-content">
-                                <p class="message-name">{{ $otherUser->name }}</p>
-                                <p class="message-ad">{{ $message->advertisement->title }}</p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             STATISTICS
+        ====================================================== -->
+
+        <section class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+
+            <div class="grid gap-5 md:grid-cols-3">
+
+
+                <!-- Favorites -->
+
+                <a href="{{ route('favorites.index') }}"
+                   class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-pink-200 hover:shadow-md">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+
+                            <p class="text-sm font-medium text-slate-500">
+                                Favorites
+                            </p>
+
+                            <p class="mt-2 text-3xl font-bold text-slate-900">
+                                {{ $favoriteCount }}
+                            </p>
+
+                        </div>
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-pink-50 text-2xl">
+                            ❤️
+                        </div>
+
+                    </div>
+
+                    <p class="mt-4 text-sm text-slate-500 group-hover:text-pink-600">
+                        View your saved advertisements →
+                    </p>
+
+                </a>
+
+
+                <!-- Messages -->
+
+                <a href="{{ route('messages.inbox') }}"
+                   class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+
+                            <p class="text-sm font-medium text-slate-500">
+                                Messages
+                            </p>
+
+                            <p class="mt-2 text-3xl font-bold text-slate-900">
+                                {{ $messageCount }}
+                            </p>
+
+                        </div>
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-2xl">
+                            💬
+                        </div>
+
+                    </div>
+
+                    <p class="mt-4 text-sm text-slate-500 group-hover:text-blue-600">
+                        Contact sellers and manage conversations →
+                    </p>
+
+                </a>
+
+
+                <!-- Notifications -->
+
+                <a href="{{ route('notifications.index') }}"
+                   class="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-amber-200 hover:shadow-md">
+
+                    <div class="flex items-center justify-between">
+
+                        <div>
+
+                            <p class="text-sm font-medium text-slate-500">
+                                Notifications
+                            </p>
+
+                            <p class="mt-2 text-3xl font-bold text-slate-900">
+                                {{ $notificationCount }}
+                            </p>
+
+                        </div>
+
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-50 text-2xl">
+                            🔔
+                        </div>
+
+                    </div>
+
+                    <p class="mt-4 text-sm text-slate-500 group-hover:text-amber-600">
+                        View your latest notifications →
+                    </p>
+
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             BROWSE ADVERTISEMENTS
+        ====================================================== -->
+
+        <section class="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
+
+            <div class="overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-slate-200">
+
+                <div class="flex flex-col items-start justify-between gap-5 p-6 sm:flex-row sm:items-center sm:p-8">
+
+                    <div class="flex items-start gap-4">
+
+                        <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-indigo-100 text-2xl">
+                            🔍
+                        </div>
+
+                        <div>
+
+                            <h2 class="text-xl font-bold text-slate-900">
+                                Browse Advertisements
+                            </h2>
+
+                            <p class="mt-1 text-sm text-slate-500">
+                                Find products, services and great deals.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <a href="{{ route('advertisements.index') }}"
+                       class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 font-semibold text-white transition hover:bg-indigo-700">
+
+                        Browse Now
+
+                        <span>→</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             RECENTLY ADDED ADVERTISEMENTS
+        ====================================================== -->
+
+        <section class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
+            <div class="mb-7 flex items-end justify-between">
+
+                <div>
+
+                    <p class="text-sm font-semibold uppercase tracking-wider text-indigo-600">
+                        Explore
+                    </p>
+
+                    <h2 class="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+                        Recently Added Advertisements
+                    </h2>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        Discover the latest approved advertisements.
+                    </p>
+
+                </div>
+
+                <a href="{{ route('advertisements.index') }}"
+                   class="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-700 sm:block">
+                    View all →
+                </a>
+
+            </div>
+
+
+            @if($recentAdvertisements->count() > 0)
+
+                <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+                    @foreach($recentAdvertisements as $advertisement)
+
+                        <a href="{{ route('advertisements.show', $advertisement) }}"
+                           class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl">
+
+
+                            <!-- Advertisement Image -->
+
+                            <div class="relative aspect-[4/3] overflow-hidden bg-slate-100">
+
+                                @php
+                                    $firstImage = $advertisement->images->first();
+                                @endphp
+
+
+                                @if($firstImage)
+
+                                    <img
+                                        src="{{ asset('storage/' . $firstImage->image) }}"
+                                        alt="{{ $advertisement->title }}"
+                                        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                    >
+
+                                @elseif($advertisement->image)
+
+                                    <img
+                                        src="{{ asset('storage/' . $advertisement->image) }}"
+                                        alt="{{ $advertisement->title }}"
+                                        class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                    >
+
+                                @else
+
+                                    <div class="flex h-full items-center justify-center text-slate-400">
+
+                                        <div class="text-center">
+
+                                            <div class="text-4xl">
+                                                📷
+                                            </div>
+
+                                            <p class="mt-2 text-sm">
+                                                No image
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+
+                                @endif
+
+
+                                <!-- Category Badge -->
+
+                                <div class="absolute left-3 top-3">
+
+                                    <span class="rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-indigo-700 shadow-sm backdrop-blur">
+
+                                        {{ $advertisement->category }}
+
+                                    </span>
+
+                                </div>
+
+
+                                <!-- Multiple Images Indicator -->
+
+                                @if($advertisement->images->count() > 1)
+
+                                    <div class="absolute bottom-3 right-3 rounded-full bg-black/70 px-3 py-1 text-xs font-medium text-white backdrop-blur">
+
+                                        📷 {{ $advertisement->images->count() }}
+
+                                    </div>
+
+                                @endif
+
                             </div>
+
+
+                            <!-- Advertisement Information -->
+
+                            <div class="p-5">
+
+                                <h3 class="line-clamp-1 text-lg font-bold text-slate-900 transition group-hover:text-indigo-600">
+
+                                    {{ $advertisement->title }}
+
+                                </h3>
+
+
+                                <div class="mt-3">
+
+                                    <p class="text-xl font-extrabold text-indigo-600">
+
+                                        Rs. {{ number_format((float) $advertisement->price, 2) }}
+
+                                    </p>
+
+                                </div>
+
+
+                                <div class="mt-3 flex items-center gap-2 text-sm text-slate-500">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke-width="1.7"
+                                         stroke="currentColor"
+                                         class="h-4 w-4 shrink-0">
+
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+
+                                        <path stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              d="M19.5 10.5c0 7.142-7.5 10.5-7.5 10.5S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+
+                                    </svg>
+
+                                    <span class="truncate">
+                                        {{ $advertisement->location }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="mt-4 border-t border-slate-100 pt-4 text-xs text-slate-400">
+
+                                    Posted {{ $advertisement->created_at->diffForHumans() }}
+
+                                </div>
+
+                            </div>
+
                         </a>
+
                     @endforeach
+
                 </div>
+
             @else
-                <div class="empty-state">No recent conversations.</div>
+
+                <div class="rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+
+                    <div class="text-5xl">
+                        📭
+                    </div>
+
+                    <h3 class="mt-4 text-lg font-bold text-slate-900">
+                        No advertisements yet
+                    </h3>
+
+                    <p class="mt-2 text-sm text-slate-500">
+                        There are currently no approved advertisements available.
+                    </p>
+
+                    <a href="{{ route('advertisements.index') }}"
+                       class="mt-5 inline-flex rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white hover:bg-indigo-700">
+
+                        Browse Advertisements
+
+                    </a>
+
+                </div>
+
             @endif
+
+        </section>
+
+
+        <!-- =====================================================
+             HOW IT WORKS
+        ====================================================== -->
+
+        <section class="bg-white py-16">
+
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                <div class="mx-auto max-w-2xl text-center">
+
+                    <p class="text-sm font-semibold uppercase tracking-wider text-indigo-600">
+                        Simple & Easy
+                    </p>
+
+                    <h2 class="mt-2 text-3xl font-bold text-slate-900">
+                        How It Works
+                    </h2>
+
+                    <p class="mt-3 text-slate-500">
+                        Find what you need and connect with sellers in just a few simple steps.
+                    </p>
+
+                </div>
+
+
+                <div class="mt-12 grid gap-10 md:grid-cols-3">
+
+
+                    <!-- Step 1 -->
+
+                    <div class="text-center">
+
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl">
+                            🔍
+                        </div>
+
+                        <div class="mt-5 text-sm font-bold text-indigo-600">
+                            STEP 01
+                        </div>
+
+                        <h3 class="mt-2 text-xl font-bold text-slate-900">
+                            Find
+                        </h3>
+
+                        <p class="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-500">
+                            Browse advertisements and find products or services that interest you.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Step 2 -->
+
+                    <div class="text-center">
+
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-pink-100 text-2xl">
+                            ❤️
+                        </div>
+
+                        <div class="mt-5 text-sm font-bold text-pink-600">
+                            STEP 02
+                        </div>
+
+                        <h3 class="mt-2 text-xl font-bold text-slate-900">
+                            Save
+                        </h3>
+
+                        <p class="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-500">
+                            Save your favorite advertisements so you can easily find them later.
+                        </p>
+
+                    </div>
+
+
+                    <!-- Step 3 -->
+
+                    <div class="text-center">
+
+                        <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-2xl">
+                            💬
+                        </div>
+
+                        <div class="mt-5 text-sm font-bold text-blue-600">
+                            STEP 03
+                        </div>
+
+                        <h3 class="mt-2 text-xl font-bold text-slate-900">
+                            Contact
+                        </h3>
+
+                        <p class="mx-auto mt-2 max-w-xs text-sm leading-6 text-slate-500">
+                            Contact the seller directly and discuss the advertisement with them.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer class="border-t border-slate-200 bg-slate-900">
+
+        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+
+            <div class="flex flex-col items-center justify-between gap-5 text-center sm:flex-row sm:text-left">
+
+                <div>
+
+                    <div class="font-bold text-white">
+                        Advertisement Platform
+                    </div>
+
+                    <p class="mt-1 text-sm text-slate-400">
+                        Find products, services and great deals.
+                    </p>
+
+                </div>
+
+
+                <div class="text-sm text-slate-400">
+
+                    © {{ date('Y') }} Advertisement Platform.
+                    All rights reserved.
+
+                </div>
+
+            </div>
+
         </div>
 
-        <!-- Notifications Section -->
-        <div class="card">
-            <h2 class="section-title">
-                Notifications
-                <a href="{{ route('notifications.index') }}" class="view-all">All &rarr;</a>
-            </h2>
-            
-            @if($notifications->count() > 0)
-                <div class="notification-list">
-                    @foreach($notifications as $notification)
-                        @php
-                            $hasLink = isset($notification->data['advertisement_id']);
-                            $tag = $hasLink ? 'a' : 'div';
-                            $href = $hasLink ? 'href="'.route('notifications.open', $notification->id).'"' : '';
-                        @endphp
-                        <{!! $tag !!} {!! $href !!} class="notification-item {{ $notification->read_at === null ? 'unread' : '' }}">
-                            <div class="notification-icon">🔔</div>
-                            <div class="notification-text">
-                                <p class="notification-title">{{ $notification->data['sender_name'] ?? 'System' }}</p>
-                                <p class="notification-desc">{{ $notification->data['message'] ?? 'You have a new notification.' }}</p>
-                                <p class="notification-time">{{ $notification->created_at->diffForHumans() }}</p>
-                            </div>
-                        </{!! $tag !!}>
-                    @endforeach
-                </div>
-            @else
-                <div class="empty-state">No recent notifications.</div>
-            @endif
-        </div>
-    </div>
-
-</div>
+    </footer>
 
 </body>
-</html>
+
+</html>
