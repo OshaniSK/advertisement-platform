@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminAdvertisementController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdvertiserController;
 use App\Http\Controllers\MessageController;
@@ -29,6 +30,11 @@ Route::get('/', function () {
 
 })->name('home');
 
+// Static informational pages
+Route::view('/about', 'static.about')->name('about');
+Route::view('/terms', 'static.terms')->name('terms');
+Route::view('/privacy', 'static.privacy')->name('privacy');
+Route::view('/faq', 'static.faq')->name('faq');
 
 /*
 |--------------------------------------------------------------------------
@@ -202,17 +208,38 @@ Route::patch('/admin/users/{user}/role', [AdminUserController::class, 'updateRol
     ->middleware(['auth', 'role:admin'])
     ->name('admin.users.updateRole');
 
+// Toggle user active/disabled status
+Route::patch('/admin/users/{user}/toggle-status', [AdminUserController::class, 'toggleStatus'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.toggleStatus');
 
-// Approve advertisement
-Route::patch('/admin/advertisements/{advertisement}/approve', [AdminController::class, 'approve'])
+// Delete user
+Route::delete('/admin/users/{user}', [AdminUserController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.users.destroy');
+
+
+// ---- Advertisement Management (Step 29) ----
+
+// Tabbed/filtered advertisement index
+Route::get('/admin/advertisements', [AdminAdvertisementController::class, 'index'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.advertisements.index');
+
+// Approve advertisement (also used from dashboard)
+Route::patch('/admin/advertisements/{advertisement}/approve', [AdminAdvertisementController::class, 'approve'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.advertisements.approve');
 
-
-// Reject advertisement
-Route::patch('/admin/advertisements/{advertisement}/reject', [AdminController::class, 'reject'])
+// Reject advertisement with reason
+Route::patch('/admin/advertisements/{advertisement}/reject', [AdminAdvertisementController::class, 'reject'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.advertisements.reject');
+
+// Delete advertisement
+Route::delete('/admin/advertisements/{advertisement}', [AdminAdvertisementController::class, 'destroy'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.advertisements.destroy');
 
 
 /*

@@ -19,6 +19,7 @@ class Advertisement extends Model
         'location',
         'image',
         'status',
+        'rejection_reason',
     ];
 
     /**

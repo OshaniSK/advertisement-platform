@@ -40,8 +40,9 @@
                             Dashboard
                         </a>
 
+                        
                         <a href="{{ route('advertisements.create') }}"
-                           class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600">
+                           class="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-700 hover:text-blue-600 transition-transform duration-200 button">
                             Post Advertisement
                         </a>
 
@@ -359,7 +360,8 @@
 
                     </div>
 
-                </div>
+                <button @click="document.documentElement.dataset.theme = (document.documentElement.dataset.theme === 'dark') ? '' : 'dark'" class="toggle-dark" title="Toggle Dark Mode"></button>
+</div>
 
             </div>
 

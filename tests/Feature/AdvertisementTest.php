@@ -135,6 +135,14 @@ test('visitors can open the visitor dashboard', function () {
     $response->assertViewIs('visitor.dashboard');
 });
 
+test('advertisers are redirected from the visitor dashboard', function () {
+    $advertiser = User::factory()->create(['role' => 'advertiser']);
+
+    $response = $this->actingAs($advertiser)->get(route('visitor.dashboard'));
+
+    $response->assertRedirect(route('advertiser.dashboard', absolute: false));
+});
+
 test('visitors are redirected when they open the advertiser dashboard URL', function () {
     $visitor = User::factory()->create(['role' => 'visitor']);
 
